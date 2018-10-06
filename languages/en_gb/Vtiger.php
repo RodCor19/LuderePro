@@ -39,7 +39,6 @@ $languageStrings = array(
 	'LBL_CLEAR'                    => 'Clear'                       , 
 	'LBL_YES'                      => 'Yes'                         , 
 	'LBL_NO'                       => 'No'                          , 
-	'LBL_EQ_ZERO'                  => 'No'                          , 
 	'LBL_SHOW_COMPLETE_DETAILS'    => 'Complete Details'            , // TODO: Review
 	'LBL_MASS_EDITING'             => 'Mass Editing'                , 
 	'LBL_DESELECT_ALL_RECORDS'     => 'Deselect all'                , 
@@ -244,7 +243,8 @@ $languageStrings = array(
 	'LBL_ALL'                      => 'All'                         , 
 	'LBL_UPDATED'                  => 'Updated'                     , 
 	'LBL_FROM'                     => 'from'                        , 
-	'LBL_TO'                       => 'to'                          , 
+	'LBL_TO'                       => 'to'                          ,
+    'LBL_to'                       => 'to'                       ,
 	'LBL_ON'                       => 'on'                          , 
 	'LBL_OF'                       => 'of'                          , 
 	'LBL_BY'                       => 'By '                         , 
@@ -554,9 +554,8 @@ $languageStrings = array(
 	'LBL_ADD_BCC'                  => 'Add Bcc'                     , // TODO: Review
 	'LBL_MAX_UPLOAD_SIZE'          => 'Maximum upload size is'      , // TODO: Review
 	'LBL_EXCEEDED'                 => 'Exceeded'                    , // TODO: Review
-        'LBL_MERGE'                    => 'Merge',
-	'LBL_CONVERSION_RATE'          => 'Conversion Rate'             ,
-    
+	'LBL_MERGE'                    => 'Merge',
+    	'LBL_CONVERSION_RATE'          => 'Conversion Rate'             , // TODO: Review
 	//Translations used for Export to Pdf
 	'Valid Date' => 'Valid Date',
 	'Phone: ' => 'Phone: ',
@@ -725,7 +724,7 @@ $jsLanguageStrings = array(
 	'JS_PBX_OUTGOING_FAILURE'=>'Call Failed',
 	'JS_PBX_FILL_ALL_FIELDS'=>'Please fill all the fields',
 	// ends
-    
-    //Edit view mode Translations
-        'JS_CHANGES_WILL_BE_LOST' => 'Your Changes Will Be Lost!',
+        
+        //No Tax exist 
+        'JS_LBL_NO_TAXES'=>'No Taxes', 
 );

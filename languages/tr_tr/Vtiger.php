@@ -38,8 +38,7 @@ $languageStrings = array(
 	'LBL_SELECT'                   => 'Seç'                        , 
 	'LBL_CLEAR'                    => 'Temizle'                     , 
 	'LBL_YES'                      => 'Evet'                        , 
-        'LBL_NO'                       => 'Hayır'                       , 
-        'LBL_EQ_ZERO'                  => 'Değil'                       , 
+	'LBL_NO'                       => 'Hayır'                      , 
 	'LBL_SHOW_COMPLETE_DETAILS'    => 'Complete Details'            , // TODO: Review
 	'LBL_MASS_EDITING'             => 'Mass Editing'                , 
 	'LBL_DESELECT_ALL_RECORDS'     => 'Tüm seçimleri kaldırmak'        , 
@@ -532,7 +531,7 @@ $languageStrings = array(
 	'LBL_GLOBAL_SEARCH_MAX_MESSAGE_FOR_MODULE' => 'Only the first 100 results are shown below. Please do Advanced Search if you are not satisfied with the result', // TODO: Review
 	'LBL ACTION'                   => 'Action'                      , // TODO: Review
 	'LBL_NOTE'                     => 'Note'                        , // TODO: Review
-	'LBL_SELECT_OPTION'            => 'Select an Option'            , // TODO: Review
+	'LBL_SELECT_OPTION'            => 'Birini seçin'            , // TODO: Review
 	'LBL_TOOLTIP'                  => 'Tooltip Management'          , // TODO: Review
 	'LBL_MODULE_SEQUENCE_NUMBERING' => 'Module Sequence Numbering'   , // TODO: Review
 	'LBL_CUSTOM_FIELD_MAPPING'     => 'Custom Field Mapping'        , // TODO: Review
@@ -720,6 +719,9 @@ $jsLanguageStrings = array(
 	'JS_PBX_OUTGOING_FAILURE'=>'Çağrı Başarısız',
 	'JS_PBX_FILL_ALL_FIELDS'=>'Tüm alanları doldurunuz',
 	// ends
+        
+        //No Tax exist 
+        'JS_LBL_NO_TAXES'=>'Hayır Vergiler', 
     
     //Edit view mode Translations
         'JS_CHANGES_WILL_BE_LOST' => 'Sizin Değişiklikler Kayıp Will Be!',

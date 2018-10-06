@@ -125,7 +125,7 @@ $languageStrings = array(
 	'LBL_OPTIONS1'                 => '',
 	'LBL_OPTIONS2'                 => "",
 	'LBL_MAIL_SERVER_SMTP'         => 'Mail Server Settings (SMTP)' , // TODO: Review
-    'LBL_OUTGOING_SERVER_NOTE'        => 'NOTE: Outgoing server should be set to SSL or TLS Protocal and If "From Email" field is set to blank then the User Email address will be picked up.',
+	'LBL_OUTGOING_SERVER_NOTE'     => 'NOTE: Outgoing server should be set to SSL or TLS Protocal and If "From Email" field is set to blank then the User Email address will be picked up.', // TODO: Review
 	'LBL_TESTMAILSTATUS'           => 'Test Mail Status : '         , // TODO: Review
 	'LBL_MAILSENDERROR'            => 'Mail could not be sent to the admin user. Please check admin\'s email address and/or server settings', // TODO: Review
 	'LBL_CONFIG_EDITOR'            => 'Configuration Editor'        , // TODO: Review
@@ -180,6 +180,7 @@ $languageStrings = array(
 	'LBL_LAST_SCAN_AT'             => 'Last scanned at '            , // TODO: Review
 	'LBL_TIME_TAKEN'               => ' time taken '                , // TODO: Review
 	'LBL_SHORT_SECONDS'            => 'sec'                         , // TODO: Review
+	'LBL_EXTENSION_STORE'	       => 'Extension Store'             ,
 	//User Login History
 	'LoginHistory' => 'User Login History',
 	'LBL_LOGIN_HISTORY_DETAILS' => 'Login History',
