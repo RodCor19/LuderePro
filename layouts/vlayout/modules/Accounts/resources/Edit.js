@@ -241,6 +241,22 @@ Vtiger_Edit_Js("Accounts_Edit_Js",{
 		}
 	},
 	
+	onchangeAccMContacto : function(container){
+		var seleccionado = $('select[name="accmcontacto"] option:selected').text();
+			if (seleccionado === "Otro") {
+				$('input[name="accmcotro"]').attr('disabled', false);
+			} else {
+				$('input[name="accmcotro"]').attr('disabled', true);
+			}
+		$('select[name="accmcontacto"]').on('change',function() {
+			var seleccionado = $('select[name="accmcontacto"] option:selected').text();
+			if (seleccionado === "Otro") {
+				$('input[name="accmcotro"]').attr('disabled', false);
+			} else {
+				$('input[name="accmcotro"]').attr('disabled', true);
+			}
+		})
+	},
 	/**
 	 * Function which will register basic events which will be used in quick create as well
 	 *
@@ -250,6 +266,7 @@ Vtiger_Edit_Js("Accounts_Edit_Js",{
 		this.registerRecordPreSaveEvent(container);
 		this.registerEventForCopyingAddress(container);
 		this.registerReferenceSelectionEvent(container);
+		this.onchangeAccMContacto(container);
 			//container.trigger(Vtiger_Edit_Js.recordPreSave, {'value': 'edit'});
 	}
 });
