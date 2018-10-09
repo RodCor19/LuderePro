@@ -119,6 +119,40 @@ if($moduleAcc){
 		// incluyo el campo en el bloque
 		$block->addField($campoMCOtro);
 	}
+	$campoMCReferido = Vtiger_Field::getInstance('accmcreferido', $moduleAcc);
+	if (!$campoMCReferido) {
+		$campoMCReferido = new Vtiger_Field();
+		$campoMCReferido->name = 'accmcreferido';
+		$campoMCReferido->label = 'accmcreferido';
+		$campoMCReferido->table = $moduleAcc->basetable;
+		$campoMCReferido->column = 'accmcreferido';
+		$campoMCReferido->columntype = 'VARCHAR(75)';
+		$campoMCReferido->uitype = 1;
+		$campoMCReferido->typeofdata = 'V~O';
+		$campoMCReferido->displaytype = 1;
+		// incluyo el campo en el bloque
+		$block->addField($campoMCReferido);
+	}
+	$campoMCReferido = Vtiger_Field::getInstance('accmccombo', $moduleAcc);
+	if (!$campoMCCombo) {
+		$campoMCCombo = new Vtiger_Field();
+		$campoMCCombo->name = 'accmccombo';
+		$campoMCCombo->label = 'accmccombo';
+		$campoMCCombo->table = $moduleAcc->basetable;
+		$campoMCCombo->column = 'accmccombo';
+		$campoMCCombo->uitype = 15;
+		$campoMCCombo->columntype = 'VARCHAR(100)';
+		$campoMCCombo->typeofdata = 'V~O';
+		$campoMCCombo->displaytype = 1;
+		// incluyo el campo en el bloque
+		$block->addField($campoMCCombo);
+	}
+
+
+
+
+
+
 	$block1 = new Vtiger_Block();
     $block1->label = 'LBL_ACC_EJERCICIO_PASANTIA_REDESSOCIALES';
     $moduleAcc->addBlock($block1);

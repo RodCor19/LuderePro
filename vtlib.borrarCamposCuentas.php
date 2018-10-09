@@ -27,6 +27,10 @@ if($moduleAcc != null){
 	$campo->delete();
 	$campo = Vtiger_Field::getInstance('accredsociallinkedin', $moduleAcc);
 	$campo->delete();
+	$campo = Vtiger_Field::getInstance('accmcreferido', $moduleAcc);
+	$campo->delete();	
+	$campo = Vtiger_Field::getInstance('accmccombo', $moduleAcc);
+	$campo->delete();
 }
 
 

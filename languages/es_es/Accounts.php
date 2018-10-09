@@ -61,7 +61,9 @@ $languageStrings = array(
 	'accredsocialfacebook' => 'Página de Facebook',
 	'accredsocialtwitter' => 'Página de Twiter',
 	'accredsocialinstagram' => 'Página de Instagram',
-	'accredsociallinkedin' => 'Págima de LinkedIn',
+	'accredsociallinkedin' => 'Página de LinkedIn',
+	'accmcreferido' => 'Referido',
+	'accmccombo' => ' ',
 );
 $jsLanguageStrings = array(
 	'LBL_RELATED_RECORD_DELETE_CONFIRMATION'      => '¿Estás seguro que quieres eliminar?',
