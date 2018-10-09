@@ -250,7 +250,7 @@
 		var td = $('select[name="accmccombo"]').parent().parent().parent();
 		var tdLabel = td.prev().children();
 		$('select[name="accmccombo"]').parent().attr('style', 'display:none');
-		tdLabel.attr('style', 'display:none');
+		tdLabel.text(' ');
 		var select = $('select[name="accmccombo"]');
 		var onclick = function(o){
 			console.log(o);
@@ -275,45 +275,55 @@
 			var td = $('select[name="accmccombo"]').parent().parent().parent();
 			var tdLabel = td.prev().children();
 			if(seleccionado === "Intermediario" || seleccionado === "Gestión proactiva"){
+				var select = $('select[name="accmccombo"]');
+				var div = select.next();
+				var idOpcion = div.attr('id');
+				var ul = div.children().next().children().next();
+				for (var i = ul.children().length - 1; i >= 1; i--) {
+					ul.children()[i].remove();
+				}
 				if (seleccionado === "Intermediario") {
 					tdLabel.text('Primer contacto');
 					var Opciones = {
 						'Nuestra Empresa' : 'Nuestra Empresa',
 						'Otra Empresa' : 'Otra Empresa'
 					};
-					var select = $('select[name="accmccombo"]');
 					$.each(Opciones, function(key, value) {
 						select.append($("<option></option>").attr("value",key-1).text(value));
 					});
-					var div = select.next();
-					var idOpcion = div.attr('id');
 					var ul = div.children().next().children().next();
 					var index = 1;
 					$.each(Opciones, function(key, value) {
-						var o = $("<li id="+idOpcion+"_o_"+index+" class='active-result' style></li>").text(value);
+						var o = $("<li id="+idOpcion+"_o_"+index+" class='active-result' style></li>").attr('value',value).text(value);
 						o.on('click', () => onclick(o));
 						ul.append(o);
 						index++;
 					});
 
-				} else {
-					var opcion1 = "<option>Gerencia</option>";
-					var opcion2 = "<option>Marketing</option>";
-					var opcion3 = "<option>Administración</option>";
-					var opcion4 = "<option>Desarrollo</option>";
-					var opcion5 = "<option>Ventas</option>";
+				}else{
 					tdLabel.text('Area');
-					$('select[name="accmccombo"]').append(new Option(opcion1, 1));
-					$('select[name="accmccombo"]').append(new Option(opcion2, 2));
-					$('select[name="accmccombo"]').append(new Option(opcion3, 3));
-					$('select[name="accmccombo"]').append(new Option(opcion4, 4));
-					$('select[name="accmccombo"]').append(new Option(opcion5, 5));
+					var Opciones = {
+						'Marketing' : 'Marketing',
+						'Administración' : 'Administración',
+						'Ventas' : 'Ventas',
+						'RRHH' : 'RRHH'
+					};
+					$.each(Opciones, function(key, value) {
+						select.append($("<option></option>").attr("value",key-1).text(value));
+					});
+					var ul = div.children().next().children().next();
+					var index = 1;
+					$.each(Opciones, function(key, value) {
+						var o = $("<li id="+idOpcion+"_o_"+index+" class='active-result' style></li>").attr('value',value).text(value);
+						o.on('click', () => onclick(o));
+						ul.append(o);
+						index++;
+					});
 				}
 				$('select[name="accmccombo"]').parent().attr('style', 'display:block');
-				tdLabel.attr('style', 'display:block');
 			}else{
 				$('select[name="accmccombo"]').parent().attr('style', 'display:none');
-				tdLabel.attr('style', 'display:none');
+				tdLabel.text(' ');
 			}
 		})
 	},
