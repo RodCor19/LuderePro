@@ -275,52 +275,33 @@
 			var td = $('select[name="accmccombo"]').parent().parent().parent();
 			var tdLabel = td.prev().children();
 			if(seleccionado === "Intermediario" || seleccionado === "Gestión proactiva"){
+				$('select[name="accmccombo"]').parent().attr('style', 'display:block');
 				var select = $('select[name="accmccombo"]');
 				var div = select.next();
 				var idOpcion = div.attr('id');
 				var ul = div.children().next().children().next();
-				for (var i = ul.children().length - 1; i >= 1; i--) {
-					ul.children()[i].remove();
-				}
 				if (seleccionado === "Intermediario") {
-					tdLabel.text('Primer contacto');
-					var Opciones = {
-						'Nuestra Empresa' : 'Nuestra Empresa',
-						'Otra Empresa' : 'Otra Empresa'
-					};
-					$.each(Opciones, function(key, value) {
-						select.append($("<option></option>").attr("value",key-1).text(value));
-					});
-					var ul = div.children().next().children().next();
-					var index = 1;
-					$.each(Opciones, function(key, value) {
-						var o = $("<li id="+idOpcion+"_o_"+index+" class='active-result' style></li>").attr('value',value).text(value);
-						o.on('click', () => onclick(o));
-						ul.append(o);
-						index++;
-					});
-
+					tdLabel.text('Primer Contacto');
+					for (var i = 1; i < ul.children().length; i++) {
+						var li = ul.children()[i];
+						if (i > 2) {
+							li.setAttribute('style', 'display:none');
+						} else {
+							li.setAttribute('style', 'display:block');
+						}						
+					}
 				}else{
 					tdLabel.text('Area');
-					var Opciones = {
-						'Marketing' : 'Marketing',
-						'Administración' : 'Administración',
-						'Ventas' : 'Ventas',
-						'RRHH' : 'RRHH'
-					};
-					$.each(Opciones, function(key, value) {
-						select.append($("<option></option>").attr("value",key-1).text(value));
-					});
-					var ul = div.children().next().children().next();
-					var index = 1;
-					$.each(Opciones, function(key, value) {
-						var o = $("<li id="+idOpcion+"_o_"+index+" class='active-result' style></li>").attr('value',value).text(value);
-						o.on('click', () => onclick(o));
-						ul.append(o);
-						index++;
-					});
+					for (var i = 1; i < ul.children().length; i++) {
+						var li = ul.children()[i];
+						if (i < 3) {
+							li.setAttribute('style', 'display:none');
+						} else {
+							li.setAttribute('style', 'display:block');
+						}						
+					}
 				}
-				$('select[name="accmccombo"]').parent().attr('style', 'display:block');
+				
 			}else{
 				$('select[name="accmccombo"]').parent().attr('style', 'display:none');
 				tdLabel.text(' ');
