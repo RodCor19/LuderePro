@@ -79,7 +79,54 @@
 	 	form.on(Vtiger_Edit_Js.recordPreSave, function(e, data) {
 	 		var accountName = thisInstance.getAccountName(form);
 	 		var recordId = thisInstance.getRecordId(form);
+	 		var accountRut = thisInstance.getAccountSiccode(form);
 	 		var params = {};
+	 		/*
+	 		if(!(accountName in thisInstance.duplicateCheckCache)) {
+	 			Vtiger_Helper_Js.checkDuplicateName({
+	 				'accountName' : accountName, 
+	 				'recordId' : recordId,
+	 				'moduleName' : 'Accounts',
+	 				'accountrut' : accountRut
+	 			}).then(
+	 			function(data){
+	 				thisInstance.duplicateCheckCache[accountName] = data['success'];
+	 				form.submit();
+	 			},
+	 			function(data, err){
+	 				thisInstance.duplicateCheckCache[accountName] = data['success'];
+	 				thisInstance.duplicateCheckCache['message'] = data['message'];
+	 				var message = app.vtranslate('JS_DUPLICTAE_CREATION_CONFIRMATION');
+	 				Vtiger_Helper_Js.showConfirmationBox({'message' : message}).then(
+	 					function(e) {
+	 						thisInstance.duplicateCheckCache[accountName] = false;
+	 						form.submit();
+	 					},
+	 					function(error, err) {
+
+	 					}
+	 					);
+	 			}
+	 			);
+	 		}
+
+	 		else {
+	 			if(thisInstance.duplicateCheckCache[accountName] == true){
+	 				var message = app.vtranslate('JS_DUPLICTAE_CREATION_CONFIRMATION');
+	 				Vtiger_Helper_Js.showConfirmationBox({'message' : message}).then(
+	 					function(e) {
+	 						thisInstance.duplicateCheckCache[accountName] = false;
+	 						form.submit();
+	 					},
+	 					function(error, err) {
+
+	 					}
+	 					);
+	 			} else {
+	 				delete thisInstance.duplicateCheckCache[accountName];
+	 				return true;
+	 			}
+	 		}*/
 	 		if(!(accountName in thisInstance.duplicateCheckCache)) {
 	 			Vtiger_Helper_Js.checkDuplicateName({
 	 				'accountName' : accountName, 
@@ -120,13 +167,55 @@
 	 					}
 	 					);
 	 			} else {
-	 				delete thisInstance.duplicateCheckCache[accountName];
-	 				return true;
+	 				if(!(accountName in thisInstance.duplicateCheckCache)) {
+	 					Vtiger_Helper_Js.checkDuplicateName({
+	 						'accountName' : accountName, 
+	 						'recordId' : recordId,
+	 						'moduleName' : 'Accounts'
+	 					}).then(
+	 					function(data){
+	 						thisInstance.duplicateCheckCache[accountName] = data['success'];
+	 						form.submit();
+	 					},
+	 					function(data, err){
+	 						thisInstance.duplicateCheckCache[accountName] = data['success'];
+	 						thisInstance.duplicateCheckCache['message'] = data['message'];
+	 						var message = app.vtranslate('JS_DUPLICTAE_CREATION_CONFIRMATION');
+	 						Vtiger_Helper_Js.showConfirmationBox({'message' : message}).then(
+	 							function(e) {
+	 								thisInstance.duplicateCheckCache[accountName] = false;
+	 								form.submit();
+	 							},
+	 							function(error, err) {
+
+	 							}
+	 							);
+	 					}
+	 					);
+	 				}
+
+	 				else {
+	 					if(thisInstance.duplicateCheckCache[accountName] == true){
+	 						var message = app.vtranslate('JS_DUPLICTAE_CREATION_CONFIRMATION');
+	 						Vtiger_Helper_Js.showConfirmationBox({'message' : message}).then(
+	 							function(e) {
+	 								thisInstance.duplicateCheckCache[accountName] = false;
+	 								form.submit();
+	 							},
+	 							function(error, err) {
+
+	 							}
+	 							);
+	 					} else {
+	 						delete thisInstance.duplicateCheckCache[accountName];
+	 						return true;
+	 					}
+	 				}
 	 			}
 	 		}
 	 		e.preventDefault();
 	 	})
-	 },
+},
 
 	/**
 	 * Function to swap array

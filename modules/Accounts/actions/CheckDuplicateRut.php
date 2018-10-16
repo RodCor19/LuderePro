@@ -8,7 +8,7 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Accounts_CheckDuplicate_Action extends Vtiger_Action_Controller {
+class Accounts_CheckDuplicateRut_Action extends Vtiger_Action_Controller {
 
 	function checkPermission(Vtiger_Request $request) {
 		return;
@@ -16,20 +16,21 @@ class Accounts_CheckDuplicate_Action extends Vtiger_Action_Controller {
 
 	public function process(Vtiger_Request $request) {
 		$moduleName = $request->getModule();
-		$accountName = $request->get('accountname');
+		$accountRut = $request->get('accountrut');
 		$record = $request->get('record');
+		global $adb;
 
-		if ($record) {
-			$recordModel = Vtiger_Record_Model::getInstanceById($record, $moduleName);
-		} else {
-			$recordModel = Vtiger_Record_Model::getCleanInstance($moduleName);
-		}
+		$consulta = "SELECT siccode FROM vtiger_account INNER JOIN vtiger_crmentity ON crmid=accountid WHERE siccode ='".$accountRut."' AND deleted=0  AND accountid<>'".$record."' ";
+		$query = $adb->query($consulta);
 
-		$recordModel->set('label', $accountName);
-		if (!$recordModel->checkDuplicate()) {
+		if ($adb->num_rows($query) == 0){
 			$result = array('success'=>false);
 		} else {
-			$result = array('success'=>true, 'message'=>vtranslate('LBL_DUPLICATES_EXIST', $moduleName));
-		}		
+			$result = array('success'=>true, 'message'=>vtranslate('LBL_DUPLICATESRUT_EXIST',$moduleName));
+		}
+
+		$response = new Vtiger_Response();
+		$response->setResult($result);
+		$response->emit();
 	}
 }
