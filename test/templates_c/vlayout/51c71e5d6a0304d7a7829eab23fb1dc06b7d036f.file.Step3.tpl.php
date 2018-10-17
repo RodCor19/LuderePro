@@ -1,6 +1,6 @@
-<?php /* Smarty version Smarty-3.1.7, created on 2018-10-06 06:39:19
+<?php /* Smarty version Smarty-3.1.7, created on 2018-10-17 16:08:36
          compiled from "D:\xampp2\htdocs\LuderePro\includes\runtime/../../layouts/vlayout\modules\Install\Step3.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:216305bb84a87edb053-84741865%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:38685bc750747467a5-74543264%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -11,7 +11,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '216305bb84a87edb053-84741865',
+  'nocache_hash' => '38685bc750747467a5-74543264',
   'function' => 
   array (
   ),
@@ -30,9 +30,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.7',
-  'unifunc' => 'content_5bb84a8808515',
+  'unifunc' => 'content_5bc75074c866d',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_5bb84a8808515')) {function content_5bb84a8808515($_smarty_tpl) {?>
+<?php if ($_valid && !is_callable('content_5bc75074c866d')) {function content_5bc75074c866d($_smarty_tpl) {?>
 <form class="form-horizontal" name="step3" method="get" action="index.php">
 	<input type=hidden name="module" value="Install" />
 	<input type=hidden name="view" value="Index" />

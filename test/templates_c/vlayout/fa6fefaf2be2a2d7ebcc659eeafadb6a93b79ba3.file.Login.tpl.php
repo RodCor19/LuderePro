@@ -1,6 +1,6 @@
-<?php /* Smarty version Smarty-3.1.7, created on 2018-10-06 05:56:11
+<?php /* Smarty version Smarty-3.1.7, created on 2018-10-17 15:28:51
          compiled from "D:\xampp2\htdocs\LuderePro\includes\runtime/../../layouts/vlayout\modules\Users\Login.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:326545bb84e7b20d595-37205918%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:280845bc75533f17a99-10750382%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -11,7 +11,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '326545bb84e7b20d595-37205918',
+  'nocache_hash' => '280845bc75533f17a99-10750382',
   'function' => 
   array (
   ),
@@ -23,9 +23,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.7',
-  'unifunc' => 'content_5bb84e7b28e63',
+  'unifunc' => 'content_5bc755342c8cd',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_5bb84e7b28e63')) {function content_5bb84e7b28e63($_smarty_tpl) {?>
+<?php if ($_valid && !is_callable('content_5bc755342c8cd')) {function content_5bc755342c8cd($_smarty_tpl) {?>
 
 <?php $_smarty_tpl->tpl_vars["_DefaultLoginTemplate"] = new Smarty_variable(vtemplate_path('Login.Default.tpl','Users'), null, 0);?>
 <?php $_smarty_tpl->tpl_vars["_CustomLoginTemplate"] = new Smarty_variable(vtemplate_path('Login.Custom.tpl','Users'), null, 0);?>

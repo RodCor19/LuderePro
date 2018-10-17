@@ -34,7 +34,7 @@ $CHAT_DISPLAY = 'true';
 $USE_RTE = 'true';
 
 // helpdesk support email id and support name (Example: 'support@vtiger.com' and 'vtiger support')
-$HELPDESK_SUPPORT_EMAIL_ID = 'rodrigo.l4.his@gmail.com';
+$HELPDESK_SUPPORT_EMAIL_ID = 'rodrigo@gmail.com';
 $HELPDESK_SUPPORT_NAME = 'your-support name';
 $HELPDESK_SUPPORT_EMAIL_REPLY_ID = $HELPDESK_SUPPORT_EMAIL_ID;
 
@@ -186,7 +186,7 @@ $display_empty_home_blocks = false;
 $disable_stats_tracking = false;
 
 // Generating Unique Application Key
-$application_unique_key = 'cded68724b23bb84b0b9ade9ec2234d3';
+$application_unique_key = '9e89121a73c0f0e282d12e54b67530d2';
 
 // trim descriptions, titles in listviews to this value
 $listview_max_textlength = 40;
