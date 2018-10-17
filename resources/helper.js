@@ -194,38 +194,6 @@ jQuery.Class("Vtiger_Helper_Js",{
 		return aDeferred.promise();
 	},
 
-	checkDuplicateRut : function(details) {
-		console.log(details);
-		var accountSiccode = details.accountSiccode;
-		var recordId = details.recordId;
-		var aDeferred = jQuery.Deferred();
-		var moduleName = details.moduleName;
-		if(typeof moduleName == "undefined"){
-			moduleName = app.getModuleName();
-		}
-		var params = {
-		'module' : moduleName,
-		'action' : "CheckDuplicate",
-		'accountrut' : accountSiccode,
-		'record' : recordId
-		}
-		AppConnector.request(params).then(
-			function(data) {
-				var response = data['result'];
-				var result = response['success'];
-				if(result == true) {
-					aDeferred.reject(response);
-				} else {
-					aDeferred.resolve(response);
-				}
-			},
-			function(error,err){
-				aDeferred.reject();
-			}
-		);
-		return aDeferred.promise();
-	},
-
 	showMessage : function(params){
 		if(typeof params.type == "undefined"){
 			params.type = 'info';

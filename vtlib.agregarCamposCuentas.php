@@ -146,7 +146,6 @@ if($moduleAcc){
 		$campoMCCombo->displaytype = 1;
 		// incluyo el campo en el bloque
 		$block->addField($campoMCCombo);
-		$campoMCCombo->setPicklistValues(array('Nuestra Empresa', 'Otra Empresa', 'Marketing', 'Administración', 'Ventas', 'RRHH') );
 	}
 
 
