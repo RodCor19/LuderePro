@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.7, created on 2018-10-17 15:36:15
+<?php /* Smarty version Smarty-3.1.7, created on 2018-10-17 16:56:31
          compiled from "D:\xampp2\htdocs\LuderePro\includes\runtime/../../layouts/vlayout\modules\Vtiger\ListViewActions.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:130305bc756ef7a3374-05758417%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '6e5c58bf9001fc90c61fc9d307f655501eb8e52f' => 
     array (
       0 => 'D:\\xampp2\\htdocs\\LuderePro\\includes\\runtime/../../layouts/vlayout\\modules\\Vtiger\\ListViewActions.tpl',
-      1 => 1467720221,
+      1 => 1539791882,
       2 => 'file',
     ),
   ),
@@ -15,6 +15,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.7',
+  'unifunc' => 'content_5bc756ef86ca1',
   'variables' => 
   array (
     'MODULE_MODEL' => 0,
@@ -28,8 +30,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'LISTVIEW_SETTING' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.7',
-  'unifunc' => 'content_5bc756ef86ca1',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_5bc756ef86ca1')) {function content_5bc756ef86ca1($_smarty_tpl) {?>
 <div class="listViewActions pull-right"><?php if ((method_exists($_smarty_tpl->tpl_vars['MODULE_MODEL']->value,'isPagingSupported')&&($_smarty_tpl->tpl_vars['MODULE_MODEL']->value->isPagingSupported()==true))||!method_exists($_smarty_tpl->tpl_vars['MODULE_MODEL']->value,'isPagingSupported')){?><div class="pageNumbers alignTop <?php if (count($_smarty_tpl->tpl_vars['LISTVIEW_LINKS']->value['LISTVIEWSETTING'])>0){?><?php }else{ ?><?php }?>"><span><span class="pageNumbersText" style="padding-right:5px"><?php if ($_smarty_tpl->tpl_vars['LISTVIEW_ENTRIES_COUNT']->value){?><?php echo $_smarty_tpl->tpl_vars['PAGING_MODEL']->value->getRecordStartRange();?>

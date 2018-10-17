@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.7, created on 2018-10-06 06:36:03
+<?php /* Smarty version Smarty-3.1.7, created on 2018-10-17 16:58:44
          compiled from "D:\xampp2\htdocs\LuderePro\includes\runtime/../../layouts/vlayout\modules\Vtiger\uitypes\Boolean.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:236715bb857d3acd095-91196552%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'cc3f1823c5c866fac6e8dc63254a91cb2475dbc4' => 
     array (
       0 => 'D:\\xampp2\\htdocs\\LuderePro\\includes\\runtime/../../layouts/vlayout\\modules\\Vtiger\\uitypes\\Boolean.tpl',
-      1 => 1538807588,
+      1 => 1539791882,
       2 => 'file',
     ),
   ),
@@ -15,6 +15,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.7',
+  'unifunc' => 'content_5bb857d3b2887',
   'variables' => 
   array (
     'FIELD_MODEL' => 0,
@@ -24,8 +26,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'SPECIAL_VALIDATOR' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.7',
-  'unifunc' => 'content_5bb857d3b2887',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_5bb857d3b2887')) {function content_5bb857d3b2887($_smarty_tpl) {?>
 <?php $_smarty_tpl->tpl_vars["FIELD_INFO"] = new Smarty_variable(Vtiger_Util_Helper::toSafeHTML(Zend_Json::encode($_smarty_tpl->tpl_vars['FIELD_MODEL']->value->getFieldInfo())), null, 0);?><?php $_smarty_tpl->tpl_vars["SPECIAL_VALIDATOR"] = new Smarty_variable($_smarty_tpl->tpl_vars['FIELD_MODEL']->value->getValidator(), null, 0);?><?php $_smarty_tpl->tpl_vars["FIELD_NAME"] = new Smarty_variable($_smarty_tpl->tpl_vars['FIELD_MODEL']->value->get('name'), null, 0);?><input type="hidden" name="<?php echo $_smarty_tpl->tpl_vars['FIELD_MODEL']->value->getFieldName();?>

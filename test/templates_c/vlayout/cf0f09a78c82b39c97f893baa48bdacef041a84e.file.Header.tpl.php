@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.7, created on 2018-10-16 20:57:42
+<?php /* Smarty version Smarty-3.1.7, created on 2018-10-17 16:38:38
          compiled from "D:\xampp2\htdocs\LuderePro\includes\runtime/../../layouts/vlayout\modules\Vtiger\Header.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:288015bc642b6515603-57118834%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'cf0f09a78c82b39c97f893baa48bdacef041a84e' => 
     array (
       0 => 'D:\\xampp2\\htdocs\\LuderePro\\includes\\runtime/../../layouts/vlayout\\modules\\Vtiger\\Header.tpl',
-      1 => 1467720221,
+      1 => 1539791882,
       2 => 'file',
     ),
   ),
@@ -15,6 +15,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.7',
+  'unifunc' => 'content_5bc642b87b86c',
   'variables' => 
   array (
     'PAGETITLE' => 0,
@@ -27,8 +29,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'CURRENT_USER_MODEL' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.7',
-  'unifunc' => 'content_5bc642b87b86c',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_5bc642b87b86c')) {function content_5bc642b87b86c($_smarty_tpl) {?>
 <!DOCTYPE html><html><head><title><?php echo vtranslate($_smarty_tpl->tpl_vars['PAGETITLE']->value,$_smarty_tpl->tpl_vars['MODULE_NAME']->value);?>

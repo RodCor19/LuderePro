@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.7, created on 2018-10-17 15:28:51
+<?php /* Smarty version Smarty-3.1.7, created on 2018-10-17 16:38:39
          compiled from "D:\xampp2\htdocs\LuderePro\includes\runtime/../../layouts/vlayout\modules\Users\Login.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:280845bc75533f17a99-10750382%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'fa6fefaf2be2a2d7ebcc659eeafadb6a93b79ba3' => 
     array (
       0 => 'D:\\xampp2\\htdocs\\LuderePro\\includes\\runtime/../../layouts/vlayout\\modules\\Users\\Login.tpl',
-      1 => 1467720221,
+      1 => 1539791882,
       2 => 'file',
     ),
   ),
@@ -15,6 +15,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.7',
+  'unifunc' => 'content_5bc755342c8cd',
   'variables' => 
   array (
     '_CustomLoginTemplateFullPath' => 0,
@@ -22,8 +24,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '_DefaultLoginTemplate' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.7',
-  'unifunc' => 'content_5bc755342c8cd',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_5bc755342c8cd')) {function content_5bc755342c8cd($_smarty_tpl) {?>
 

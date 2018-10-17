@@ -26,7 +26,7 @@ class Accounts_CheckDuplicateRut_Action extends Vtiger_Action_Controller {
 		if ($adb->num_rows($query) == 0){
 			$result = array('success'=>false);
 		} else {
-			$result = array('success'=>true, 'message'=>vtranslate('LBL_DUPLICATESRUT_EXIST',$moduleName));
+			$result = array('success'=>true, 'message'=>vtranslate('LBL_DUPLICATES_RUT_EXIST',$moduleName));
 		}
 
 		$response = new Vtiger_Response();
