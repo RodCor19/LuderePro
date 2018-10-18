@@ -144,7 +144,6 @@
         			form.submit();
         		},
         		function(data, err){
-        			console.log(data);
         			thisInstance.duplicateCheckRUTCache[accountRut] = data['success'];
         			thisInstance.duplicateCheckRUTCache['message'] = data['message'];
         			var message = data['message'];
@@ -152,7 +151,6 @@
         		});
         		return false;
         	}else {
-        		console.log(thisInstance.duplicateCheckRUTCache[accountRut]);
         		if(thisInstance.duplicateCheckRUTCache[accountRut] === true){
         			Vtiger_Helper_Js.showPnotify(app.vtranslate('JS_DUPLICATES_RUT_EXIST'));
         			return false;
