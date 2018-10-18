@@ -195,7 +195,7 @@ jQuery.Class("Vtiger_Helper_Js",{
 	},
 
 	checkDuplicateRut : function(details) {
-		var accountRut = details.accountSiccode;
+		var accountRut = details.accountRut;
 		var recordId = details.recordId;
 		var aDeferred = jQuery.Deferred();
 		var moduleName = details.moduleName;
@@ -205,14 +205,13 @@ jQuery.Class("Vtiger_Helper_Js",{
 		var params = {
 		'module' : moduleName,
 		'action' : "CheckDuplicateRut",
-		'accountrut' : accountRut,
+		'accountRut' : accountRut,
 		'record' : recordId
 		}
 		AppConnector.request(params).then(
 			function(data) {
 				var response = data['result'];
-				var result = response['success'];
-				if(result == true) {
+				if(data['success'] === true) {
 					aDeferred.reject(response);
 				} else {
 					aDeferred.resolve(response);

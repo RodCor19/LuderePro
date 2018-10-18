@@ -13,6 +13,7 @@
 
     //Stored history of account name and duplicate check result
     duplicateCheckCache : {},
+    duplicateCheckRUTCache : {},
 
 	//This will store the editview form
 	editViewForm : false,
@@ -41,7 +42,8 @@
    	'ship_state':'ship_state',
    	'ship_code':'ship_code',
    	'ship_country':'ship_country'
-   },                          
+   },
+
 
 	/**
 	 * This function will return the current form
@@ -128,33 +130,38 @@
         })*/
 
         form.on(Vtiger_Edit_Js.recordPreSave, function(e, data) {
-        	Vtiger_Helper_Js.checkDuplicateRut({
-        		'accountRut' : accountRut, 
-        		'recordId' : recordId,
-        		'moduleName' : 'Accounts'
-        	}).then(
-        	function(data){
-        		thisInstance.duplicateCheckCache[accountName] = data['success'];
-        		form.submit();
-        	},
-        	function(data, err){
-        		thisInstance.duplicateCheckCache[accountName] = data['success'];
-        		thisInstance.duplicateCheckCache['message'] = data['message'];
-        		var message = app.vtranslate('JS_DUPLICTAE_CREATION_CONFIRMATION');
-        		Vtiger_Helper_Js.showConfirmationBox({'message' : message}).then(
-        			function(e) {
-        				thisInstance.duplicateCheckCache[accountName] = false;
-        				form.submit();
-        			},
-        			function(error, err) {
-
-        			}
-        			);
-        	}
-        	);
-        	var accountName = thisInstance.getAccountName(form);
+        	var accountRut = $('input[name="siccode"]').val();
         	var recordId = thisInstance.getRecordId(form);
         	var params = {};
+        	if(!(accountRut in thisInstance.duplicateCheckRUTCache)){
+        		Vtiger_Helper_Js.checkDuplicateRut({
+        			'accountRut' : accountRut, 
+        			'recordId' : recordId,
+        			'moduleName' : 'Accounts'
+        		}).then(
+        		function(data){
+        			thisInstance.duplicateCheckRUTCache[accountRut] = data['success'];
+        			form.submit();
+        		},
+        		function(data, err){
+        			console.log(data);
+        			thisInstance.duplicateCheckRUTCache[accountRut] = data['success'];
+        			thisInstance.duplicateCheckRUTCache['message'] = data['message'];
+        			var message = data['message'];
+        			Vtiger_Helper_Js.showPnotify(message);
+        		});
+        		return false;
+        	}else {
+        		console.log(thisInstance.duplicateCheckRUTCache[accountRut]);
+        		if(thisInstance.duplicateCheckRUTCache[accountRut] === true){
+        			Vtiger_Helper_Js.showPnotify(app.vtranslate('JS_DUPLICATES_RUT_EXIST'));
+        			return false;
+        		} else {
+        			delete thisInstance.duplicateCheckCache[accountName];
+        		}
+        	}
+        	var accountName = thisInstance.getAccountName(form);
+        	params = {};
         	if(!(accountName in thisInstance.duplicateCheckCache)) {
         		Vtiger_Helper_Js.checkDuplicateName({
         			'accountName' : accountName, 

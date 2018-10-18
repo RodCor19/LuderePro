@@ -16,14 +16,14 @@ class Accounts_CheckDuplicateRut_Action extends Vtiger_Action_Controller {
 
 	public function process(Vtiger_Request $request) {
 		$moduleName = $request->getModule();
-		$accountRut = $request->get('accountrut');
+		$accountRut = $request->get('accountRut');
 		$record = $request->get('record');
 		global $adb;
 
 		$consulta = "SELECT siccode FROM vtiger_account INNER JOIN vtiger_crmentity ON crmid=accountid WHERE siccode ='".$accountRut."' AND deleted=0  AND accountid<>'".$record."' ";
 		$query = $adb->query($consulta);
 
-		if ($adb->num_rows($query) == 0){
+		if ($adb->num_rows($query) === 0){
 			$result = array('success'=>false);
 		} else {
 			$result = array('success'=>true, 'message'=>vtranslate('LBL_DUPLICATES_RUT_EXIST',$moduleName));

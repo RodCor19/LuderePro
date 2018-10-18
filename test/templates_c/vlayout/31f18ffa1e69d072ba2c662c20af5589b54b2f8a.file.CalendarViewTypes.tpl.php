@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.7, created on 2018-10-09 02:37:59
+<?php /* Smarty version Smarty-3.1.7, created on 2018-10-17 17:54:12
          compiled from "D:\xampp2\htdocs\LuderePro\includes\runtime/../../layouts/vlayout\modules\Calendar\CalendarViewTypes.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:198585bbc1487d5c927-88640252%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '31f18ffa1e69d072ba2c662c20af5589b54b2f8a' => 
     array (
       0 => 'D:\\xampp2\\htdocs\\LuderePro\\includes\\runtime/../../layouts/vlayout\\modules\\Calendar\\CalendarViewTypes.tpl',
-      1 => 1538807587,
+      1 => 1539791881,
       2 => 'file',
     ),
   ),
@@ -15,6 +15,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.7',
+  'unifunc' => 'content_5bbc1487ed421',
   'variables' => 
   array (
     'MODULE' => 0,
@@ -23,8 +25,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'INVISIBLE_CALENDAR_VIEWS_EXISTS' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.7',
-  'unifunc' => 'content_5bbc1487ed421',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_5bbc1487ed421')) {function content_5bbc1487ed421($_smarty_tpl) {?>
 <div name='calendarViewTypes'><div id="calendarview-feeds" style="margin-left:10px;"><!--Adding or Editing calendar views in My Calendar--><div class="modal addViewsToCalendar hide"><div class="modal-header contentsBackground"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3><?php echo vtranslate('LBL_ADD_CALENDAR_VIEW',$_smarty_tpl->tpl_vars['MODULE']->value);?>

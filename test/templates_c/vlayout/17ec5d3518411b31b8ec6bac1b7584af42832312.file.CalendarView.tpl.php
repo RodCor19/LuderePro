@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.7, created on 2018-10-09 02:37:57
+<?php /* Smarty version Smarty-3.1.7, created on 2018-10-17 17:54:10
          compiled from "D:\xampp2\htdocs\LuderePro\includes\runtime/../../layouts/vlayout\modules\Calendar\CalendarView.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:272875bbc1485dfd5f2-94839764%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '17ec5d3518411b31b8ec6bac1b7584af42832312' => 
     array (
       0 => 'D:\\xampp2\\htdocs\\LuderePro\\includes\\runtime/../../layouts/vlayout\\modules\\Calendar\\CalendarView.tpl',
-      1 => 1538807587,
+      1 => 1539791881,
       2 => 'file',
     ),
   ),
@@ -15,13 +15,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.7',
+  'unifunc' => 'content_5bbc1485e9dae',
   'variables' => 
   array (
     'CURRENT_USER' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.7',
-  'unifunc' => 'content_5bbc1485e9dae',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_5bbc1485e9dae')) {function content_5bbc1485e9dae($_smarty_tpl) {?>
 <input type="hidden" id="currentView" value="<?php echo getPurifiedSmartyParameters('view');?>

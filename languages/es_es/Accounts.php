@@ -71,4 +71,5 @@ $jsLanguageStrings = array(
 	'LBL_DELETE_CONFIRMATION'      => 'Borrar esta cuenta eliminará sus relaciones con Oportunidades, Presupuestos, Ordenes de Venta y Facturas. ¿Quieres borrar la Cuenta?',
 	'LBL_MASS_DELETE_CONFIRMATION' => 'Borrar esta cuenta eliminará sus relaciones con Oportunidades, Presupuestos, Ordenes de Venta y Facturas. ¿Quieres borrar los registros seleccionados?',
 	'JS_DUPLICTAE_CREATION_CONFIRMATION' => 'Este nombre de Cuenta ya existe. ¿Quieres crear un registro duplicado?',
+	'JS_DUPLICATES_RUT_EXIST'         => 'Una cuenta con este rut ya existe',
 );
