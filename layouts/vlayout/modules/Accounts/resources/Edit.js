@@ -139,15 +139,19 @@
         			'recordId' : recordId,
         			'moduleName' : 'Accounts'
         		}).then(
-        		function(data){
-        			thisInstance.duplicateCheckRUTCache[accountRut] = data['success'];
-        			form.submit();
+        		function(data) {
+        			console.log(data);
         		},
         		function(data, err){
-        			thisInstance.duplicateCheckRUTCache[accountRut] = data['success'];
-        			thisInstance.duplicateCheckRUTCache['message'] = data['message'];
-        			var message = data['message'];
-        			Vtiger_Helper_Js.showPnotify(message);
+        			if(data['success'] === true){
+        				thisInstance.duplicateCheckRUTCache[accountRut] = data['success'];
+        				thisInstance.duplicateCheckRUTCache['message'] = data['message'];
+        				var message = data['message'];
+        				Vtiger_Helper_Js.showPnotify(message);
+        			}else{
+        				thisInstance.duplicateCheckRUTCache[accountRut] = data['success'];
+        				form.submit();
+        			}
         		});
         		return false;
         	}else {

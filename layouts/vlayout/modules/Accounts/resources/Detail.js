@@ -67,6 +67,7 @@ Vtiger_Detail_Js("Accounts_Detail_Js",{
 },{
 	//Cache which will store account name and whether it is duplicate or not
 	accountDuplicationCheckCache : {},
+	accountDuplicationCheckCacheRut : {},
 
 	getDeleteMessageKey : function() {
 		return 'LBL_RELATED_RECORD_DELETE_CONFIRMATION';
@@ -102,40 +103,100 @@ Vtiger_Detail_Js("Accounts_Detail_Js",{
 		return aDeferred.promise();
 	},
 
+	isAccountRutDuplicate : function() {
+		var thisInstance = this;
+		var accountRut = $('input[name="siccode"]').val();
+		var recordId = thisInstance.getRecordId();
+		var aDeferred = jQuery.Deferred();
+
+		var analyzeResponse = function(response){
+			if(response['success'] === true) {
+				aDeferred.reject(response['message']);
+			}else{
+				aDeferred.resolve();
+			}
+		}
+
+		if(accountRut in thisInstance.accountDuplicationCheckCacheRut) {
+			analyzeResponse(thisInstance.accountDuplicationCheckCacheRut[accountRut]);
+		}else{
+			Vtiger_Helper_Js.checkDuplicateRut({
+				'accountRut' : accountRut, 
+        		'recordId' : recordId,
+        		'moduleName' : 'Accounts'
+			}).then(
+				function(response){
+					thisInstance.accountDuplicationCheckCacheRut[accountRut] = response;
+					analyzeResponse(response);
+				},
+				function(response) {
+					thisInstance.accountDuplicationCheckCacheRut[accountRut] = response;
+					analyzeResponse(response);
+				}
+			);
+		}
+		return aDeferred.promise();
+	},
+
 	saveFieldValues : function (fieldDetailList) {
 		var thisInstance = this;
 		var targetFn = this._super;
-		
 		var fieldName = fieldDetailList.field;
-		if(fieldName != 'accountname') {
+		if(fieldName != 'accountname' && fieldName != 'siccode') {
 			return targetFn.call(thisInstance, fieldDetailList);
 		}
 
 		var aDeferred = jQuery.Deferred();
-		fieldDetailList.accountName = fieldDetailList.value;
-		fieldDetailList.recordId = this.getRecordId();
-		this.isAccountNameDuplicate(fieldDetailList).then(
-			function() {
-				targetFn.call(thisInstance, fieldDetailList).then(
-					function(data){
-						aDeferred.resolve(data);
-					},function() {
-						aDeferred.reject();
-					}
-				);
-			},
-			function(message) {
-				var form = thisInstance.getForm();
-				var params = {
-					title: app.vtranslate('JS_DUPLICATE_RECORD'),
-					text: app.vtranslate(message),
-					width: '35%'
-				};
-				Vtiger_Helper_Js.showPnotify(params);
-				form.find('[name="accountname"]').closest('td.fieldValue').trigger('click');
-				aDeferred.reject();
-			}
-		)
+		if (fieldName === 'accountname') {
+			fieldDetailList.accountName = fieldDetailList.value;
+			fieldDetailList.recordId = this.getRecordId();
+			this.isAccountNameDuplicate(fieldDetailList).then(
+				function() {
+					targetFn.call(thisInstance, fieldDetailList).then(
+						function(data){
+							aDeferred.resolve(data);
+						},function() {
+							aDeferred.reject();
+						}
+					);
+				},
+				function(message) {
+					var form = thisInstance.getForm();
+					var params = {
+						title: app.vtranslate('JS_DUPLICATE_RECORD'),
+						text: app.vtranslate(message),
+						width: '35%'
+					};
+					Vtiger_Helper_Js.showPnotify(params);
+					form.find('[name="accountname"]').closest('td.fieldValue').trigger('click');
+					aDeferred.reject();
+				}
+			)
+		} else {
+			this.isAccountRutDuplicate().then(
+				function() {
+					targetFn.call(thisInstance, fieldDetailList).then(
+						function(data){
+							aDeferred.resolve(data);
+						},function() {
+							aDeferred.reject();
+						}
+					);
+				},
+				function(message) {
+					var form = thisInstance.getForm();
+					var params = {
+						title: app.vtranslate('JS_DUPLICATE_RECORD'),
+						text: app.vtranslate(message),
+						width: '35%'
+					};
+					Vtiger_Helper_Js.showPnotify(params);
+					form.find('[name="siccode"]').closest('td.fieldValue').trigger('click');
+					aDeferred.reject();
+				}
+			)
+		}		
+		
 		return aDeferred.promise();
 	},
         
