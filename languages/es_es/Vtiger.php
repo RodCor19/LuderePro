@@ -624,6 +624,50 @@ $languageStrings = array(
 	'Website: ' => 'Website: ',
 	'Tax' => 'Impuesto',
 	'LBL_ALPHABETS' => 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z',
+	//Accounts
+	'industry'                     => 'Industria',
+	'Account Name'                 => 'Nombre de Cuenta',
+	'Account No'                   => 'Número de Cuenta',
+	'Website'                      => 'Página web',
+	'Ticker Symbol'                => 'Símbolo de bolsa',
+	'Member Of'                    => 'Miembro de',
+	'Employees'                    => 'Empleados',
+	'Ownership'                    => 'Propietario',
+	'SIC Code'                     => 'CIF',
+	'Other Email'                  => 'Email (Alternativo)',
+	'Other Phone'                  => 'Teléfono (Alternativo)',
+	'Phone'                        => 'Teléfono',
+	'Email'                        => 'Email',
+	'Analyst'                      => 'Analista',
+	'Competitor'                   => 'Competencia',
+	'Customer'                     => 'Cliente',
+	'Integrator'                   => 'Integrador',
+	'Investor'                     => 'Inversor',
+	'Press'                        => 'Prensa',
+	'Prospect'                     => 'Prospecto',
+    'Prospect Accounts'            => 'Cuentas Prospect',
+	'Reseller'                     => 'Revendedor',
+	'accrsocial'                   => 'Razón social',
+	'accrut'                       => 'RUT',
+	'acctcompra'                   => 'Tipo de Compra',
+	'acctatencion'                 => 'Tipo de atención',
+	'accmcontacto'                 => 'Modo de contacto',
+	'accisproveedor'               => '¿Es proveedor?',
+	'accmcotro'                    => 'Si es otro, describa la relación',
+	'accredsocialfacebook'         => 'Página de Facebook',
+	'accredsocialtwitter'          => 'Página de Twiter',
+	'accredsocialinstagram'        => 'Página de Instagram',
+	'accredsociallinkedin'         => 'Página de LinkedIn',
+	'accmcreferido'                => 'Referido',
+	'accmccombo'                   => ' ',
+	//Botones y labels
+	'LBL_CONECT'                   => 'Conectar',
+	'LBL_DBNAME'                => 'Nombre de la base de datos',
+	'LBL_DBNAME'                => 'Nombre de la base de datos',
+	'LBL_HOST'                	=> 'Dirección de la base de datos',
+	'LBL_PORT'                	=> 'Puerto',
+	'LBL_DBCONECTION'           => 'Conexión a una base de datos externa',
+	'LBL_CHECKBOX_PORT'         => 'Habilitar si es necesario especificar un puerto',
 		
 	//Realted tab strings
 	'Service Contracts' => 'Contratos de Servicio',
@@ -821,4 +865,7 @@ $jsLanguageStrings = array(
     
     //Edit view mode Translations
         'JS_CHANGES_WILL_BE_LOST' => 'Sus cambios se perderán!',
+
+    //para otra bd
+    'JS_LBL_CHECKPORTENABLED' => 'Habilitar edición de puerto',
 );

@@ -224,6 +224,7 @@ jQuery.Class("Vtiger_Helper_Js",{
 		return aDeferred.promise();
 	},
 
+
 	showMessage : function(params){
 		if(typeof params.type == "undefined"){
 			params.type = 'info';
