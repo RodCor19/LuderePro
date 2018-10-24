@@ -61,24 +61,27 @@ jQuery.Class("Settings_Vtiger_Announcements_Js",{},{
 			var params = {
 				'module' : 'Vtiger',
 				'parent' : 'Settings',
-				'action' : 'ConectionExternalDB',
+				'action' : 'ConnectionExternalDB',
 				'dbhost' : host,
 				'dbuser' : user,
 				'dbpassword' : pass,
 				'dbdatabase' : database  
 			}
-			console.log(params);
 			AppConnector.request(params).then(
 				function(data) {
 					console.log(data);
-					if(data['success'] === false){
-						aDeferred.resolve(data);
+					/*if(data !== null && data['success'] === false){
+						aDeferred.resolve(data['result']);
 					}else{
-						aDeferred.reject(data['error']);
-					}
+						if (data === null) {
+							aDeferred.reject('Ocurrió un error interno');
+						} else {
+							aDeferred.reject(data['result']['mensaje']);
+						}
+					}*/
 				},
 				function(error,err){
-					console.log(data);
+					console.log(error);
 					aDeferred.reject();
 				}
 			);
@@ -121,6 +124,7 @@ jQuery.Class("Settings_Vtiger_Announcements_Js",{},{
 			//save the new Announcement
 			thisInstance.saveAnnouncement(textAreaElement).then(
 				function(data) {
+
 					progressIndicatorElement.progressIndicator({'mode' : 'hide'});
 					thisInstance.registerKeyUpEvent();
 					var params = {
@@ -161,13 +165,18 @@ jQuery.Class("Settings_Vtiger_Announcements_Js",{},{
 		conectButton.click(function(e) {
 			thisInstance.connectDB().then(
 				function(data) {
-					var params = {
-						text: 'Se conectó a la base de datos'
-					};
-					Settings_Vtiger_Index_Js.showMessage(params);
+					if (data['success'] === true) {
+						var params = {
+							text: 'Se conectó a la base de datos'
+						};
+						Settings_Vtiger_Index_Js.showMessage(params);
+					} else {
+						Vtiger_Helper_Js.showPnotify(data['mensaje']);
+					}
+					
 				},
 				function(error){
-
+					Vtiger_Helper_Js.showPnotify(error);
 				}
 			);
 		})
