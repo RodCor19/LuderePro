@@ -1,9 +1,0 @@
-#divTable {
-    overflow:scroll;
-    height:500px;
-    width:100%;
-}
-
-#divTable table {
-    width: 100%;
-}
