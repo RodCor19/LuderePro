@@ -8,20 +8,25 @@ class Settings_Vtiger_ConnectionExternalDB_Action extends Settings_Vtiger_Basic_
         $password = $request->get('dbpassword');
         $error = '';
         $message = '';
-        $data = null;
+        $tuplas = null;
 
         static $conexion = null;
-        if (null === $conexion) {
+        if (null == $conexion) {
             
             if (!$conexion = new mysqli($host, $user, $password, $database)) {
             	$error = $conexion->connect_error;
             	$conexion = null;
             } else {
-				$result = $conexion->query('SELECT * FROM vtiger_account');
-				for ($i=0; $i < $result->num_rows; $i++) { 
-					$data[]= json_encode($result->fetch_object());
+        		$data = null;
+				if($result = $conexion->query('SELECT * FROM vtiger_account')){
+        			while ($fila = $result->fetch_object()) {
+        				$data[] = $fila;
+        			}
+        			$tuplas = $data;
+				}else{
+					$error = $conexion->error;
+					$conexion = null;
 				}
-				 
             }
             	          
         }
@@ -30,9 +35,8 @@ class Settings_Vtiger_ConnectionExternalDB_Action extends Settings_Vtiger_Basic_
         
 		$responce = new Vtiger_Response();
         if($conexion !== null){
-        	$responce->setResult(array('success'=>true, 'data'=> $data));
-
-        		mysqli_close($conexion);
+        	$responce->setResult(array('success'=>true, 'data'=> $tuplas));
+        	mysqli_close($conexion);
         }else{
         	$responce->setResult(array('success'=>false, 'message'=> "No se puede conectar con el servidor", 'error' => $error));
         }
@@ -42,6 +46,5 @@ class Settings_Vtiger_ConnectionExternalDB_Action extends Settings_Vtiger_Basic_
     public function validateRequest(Vtiger_Request $request) { 
         $request->validateWriteAccess(); 
     }
-
 }
 ?>
