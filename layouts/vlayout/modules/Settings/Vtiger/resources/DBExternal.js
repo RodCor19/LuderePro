@@ -73,12 +73,12 @@
 	 	}
 	 	AppConnector.request(params).then(
 	 		function(data) {
-	 			console.log(data);
 	 			if(data !== null && data['success'] === true){
 	 				aDeferred.resolve(data['result']);
 	 			}else{
+	 				console.log(data);
 	 				if (data === null) {
-	 					aDeferred.reject('Ocurrió un error interno');
+	 					aDeferred.reject({'message' : 'UPS! sucedió un error interno','error':'Verifique los campos seleccionados'});
 	 				} else {
 	 					aDeferred.reject(data['result']);
 	 				}
@@ -102,9 +102,17 @@
 	 					console.log(data);
 	 				},
 	 				function(error, err) {
-
+	 					Vtiger_Helper_Js.showPnotify({
+							title: error['message'],
+							text: error['error']
+						});
 	 				}
 	 			);
+			});
+	 	}else{
+	 		Vtiger_Helper_Js.showPnotify({
+				title: 'Ningún campo ha sido seleccionado',
+				text: 'Seleccione los campos a importar'
 			});
 	 	}
 	 },
