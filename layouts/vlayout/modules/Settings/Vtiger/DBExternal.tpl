@@ -87,7 +87,28 @@
         </div>
     </div>
     <hr>
-    <div id='table' class="contents row-fluid divTable">
+    <div id='dataDB' class="contents row-fluid hide">
+        <div>
+            <div class="span6">
+                <h4 class="pull-right" style="margin-top: 5px;">{vtranslate('LBL_SELECTMODULESNAME', $QUALIFIED_MODULE)}</h4>
+            </div>
+            <div class="span6">
+                <select id="selectModulesName">
+                    <option value="none">Seleccionar</option>
+                </select>
+            </div>
+        </div>
+        <div id="table">
+            
+        </div>
+        <div id="buttons" class="widget_header pull-right">
+            <button style="margin-top: 5px;" class="alignRight btn btn-success">
+                {vtranslate('LBL_IMPORT', $QUALIFIED_MODULE)}
+            </button>
+            <button class="alignRight btn btn-danger">
+                {vtranslate('LBL_CANCEL', $QUALIFIED_MODULE)}
+            </button>
+        </div>
 
     </div>
 </div>

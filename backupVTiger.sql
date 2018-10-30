@@ -13,7 +13,7 @@
 
 
 -- Volcando estructura de base de datos para vtiger
-CREATE DATABASE IF NOT EXISTS `vtiger` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE IF NOT EXISTS `vtiger2` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `vtiger`;
 
 -- Volcando estructura para tabla vtiger.com_vtiger_workflows
