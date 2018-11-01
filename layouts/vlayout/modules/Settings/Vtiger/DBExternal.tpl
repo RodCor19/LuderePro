@@ -87,7 +87,7 @@
         </div>
     </div>
     <hr>
-    <div id='dataDB' class="contents row-fluid hide">
+    <div id='dataDB' class="contents row-fluid {if !isset($datos)}hide{/if}">
         <div>
             <div class="span6">
                 <h4 class="pull-right" style="margin-top: 5px;">{vtranslate('LBL_SELECTMODULESNAME', $QUALIFIED_MODULE)}</h4>
@@ -95,6 +95,11 @@
             <div class="span6">
                 <select id="selectModulesName">
                     <option value="none">Seleccionar</option>
+                    {if isset($datos)}
+                        {foreach $datos as $dato}
+                            <option value="{$dato['tabid']}">{$dato['name']}</option>
+                        {/foreach}
+                    {/if}
                 </select>
             </div>
         </div>

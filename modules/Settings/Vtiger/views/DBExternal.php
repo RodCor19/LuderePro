@@ -13,8 +13,34 @@ class Settings_Vtiger_DBExternal_View extends Settings_Vtiger_Index_View {
     
     public function process(Vtiger_Request $request) {        
         $qualifiedModuleName = $request->getModule(false);
-        
+        $datos = null;
+        if(file_exists('dataBaseExports.ini')){
+        	$dbdatos = parse_ini_file('dataBaseExports.ini');
+			$host = $dbdatos['host'];
+			$database = $dbdatos['database'];
+			$user = $dbdatos['user'];
+			$password = $dbdatos['password'];
+        	$conexion = new mysqli($host, $user, $password, $database);
+			if (mysqli_connect_errno()){
+				die();
+			} else {
+				if($result = $conexion->query('SELECT tabid, name FROM vtiger_tab WHERE presence in (0, 2);')){
+					while ($fila = $result->fetch_object()) {
+						$data = null;
+						foreach ($fila as $key => $value) {
+							if ($key == 'name') {
+								$data[$key] = vtranslate($value);
+							}else{
+								$data[$key] = $value;
+							}
+						}
+						$datos[] = $data;
+					}
+				}
+			}
+        }
         $viewer = $this->getViewer($request);
+        $viewer->assign('datos', $datos);
         $viewer->view('DBExternal.tpl',$qualifiedModuleName);
     }
 	
