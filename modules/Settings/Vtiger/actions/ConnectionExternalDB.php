@@ -33,14 +33,7 @@ class Settings_Vtiger_ConnectionExternalDB_Action extends Settings_Vtiger_Basic_
 				$conexion = null;
 			}else{
 				foreach ($result as $dato) {
-					$data = null;
-					foreach ($dato as $key => $value) {
-						if ($key == 'name') {
-							$data[$key] = vtranslate($value);
-						}else{
-							$data[$key] = $value;
-						}
-					}
+					$dato['name'] = vtranslate($dato['name']);
 					$tuplas[] = $dato;
 				}
 			}

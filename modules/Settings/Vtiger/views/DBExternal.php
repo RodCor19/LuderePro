@@ -32,14 +32,7 @@ class Settings_Vtiger_DBExternal_View extends Settings_Vtiger_Index_View {
 					$conexion = null;
 				}else{
 					foreach ($result as $dato) {
-						$data = null;
-						foreach ($dato as $key => $value) {
-							if ($key == 'name') {
-								$data[$key] = vtranslate($value);
-							}else{
-								$data[$key] = $value;
-							}
-						}
+						$dato['name'] = vtranslate($dato['name']);
 						$datos[] = $dato;
 					}
 					$conexion->resetSettings();

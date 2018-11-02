@@ -197,52 +197,50 @@
 	 	/* llama a funcion loadfields
 	 	*/
 	 	if($('#selectModulesName').children().length > 1){
-	 		$('#selectModulesName').change(function(e) {
+	 		$('#selectModulesName').change(function(e){
 	 			loadfields().then(
-					//callback si hubo 200 OK
-					function(data) {
-						//consulta si no hubo error en el action
-						if (data['success'] === true) {
-							//crea la tabla mediante texto
-							var table = '<table class="table"  style="width:100%">';
-							//obtiene las tuplas, cada objeto en array representa un campo y sus datos
-							var tuplas = data['data'];
-							//cabecera de la tabla
-							table = table + '<thead><tr><th></th><th>Campo</th><th>UIType</th></tr></thead><tbody>';
-							//si no es null el array inserta los campos una fila a la vez
-							if(tuplas != null)
-								tuplas.forEach(function(fila, index) {
-									table = table + '<tr>';
-									table = table + '<td style="content-aling: center"><input type="checkbox" value ='+ JSON.stringify(fila) +' /></td>';
-									table = table + '<td style="content-aling: center">'+fila['fieldlabel']+'</td>';
-									table = table + '<td style="content-aling: center">'+fila['uitype']+'</td>';
-									table = table + '</tr>';
-								});
-							//fin de la tabla
-							table = table + '</tbody></table>';
-							//vacia el div que contiene la tabla
-							$('#table').empty();
-							//pone style al div para que sea scrolleable
-							$('#table').attr('style', 'overflow:scroll; height:300px; width:100%;');
-							//inserta la tabla en el div
-							$('#table').append(table);
-							//activa los botones
-							cancelButton2.attr('disabled', false);
-							importButton.attr('disabled', false);
-						} else {
-							//muestra un mensaje con el error que viene en el callback
-							Vtiger_Helper_Js.showPnotify({
-								title: data['message'],
-								text: data['error']
-							});
-						}
-					},
-					//callback si no hubo 200 OK
-					function(error, err){
-						//muestra un mensaje de error
-						Vtiger_Helper_Js.showPnotify({'message' : 'UPS!','error':'Ocurrió un error interno'});
-					}
-					);
+	 			//callback 200 OK
+	 			function(data) {
+	 				//action todo bien
+	 				if (data['success'] === true) {
+	 					//crea tabla
+	 					var table = '<table class="table"  style="width:100%">';
+	 					//toma array
+	 					var tuplas = data['data'];
+	 					table = table + '<thead><tr><th>Campo</th><th>UIType</th><th>Crear</th><th>Sobreescribir</th></tr></thead><tbody>';
+	 					if(tuplas != null)
+	 						//crea fila a fila
+	 					tuplas.forEach(function(fila, index) {
+	 						table = table + '<tr>';
+	 						table = table + '<td style="content-aling: center">'+fila['fieldlabel']+'</td>';
+	 						table = table + '<td style="content-aling: center">'+fila['uitype']+'</td>';
+	 						if (fila.existe === false) {
+	 							table = table + '<td style="content-aling: center"><input type="checkbox" value ='+ JSON.stringify(fila) +' /></td>';
+	 							table = table + '<td style="content-aling: center"></td>';
+	 						} else {
+	 							table = table + '<td style="content-aling: center"></td>';
+	 							table = table + '<td style="content-aling: center"><input type="checkbox" value ='+ JSON.stringify(fila) +' /></td>';
+	 						}
+	 						table = table + '</tr>';
+	 					});
+	 					table = table + '</tbody></table>';
+	 					$('#table').empty();
+	 					$('#table').attr('style', 'overflow:scroll; height:300px; width:100%;');
+	 					$('#table').append(table);
+	 					cancelButton2.attr('disabled', false);
+	 					importButton.attr('disabled', false);
+	 				} else {
+	 					Vtiger_Helper_Js.showPnotify({
+	 						title: data['message'],
+	 						text: data['error']
+	 					});
+	 				}
+	 			},
+	 			//callback no 200 OK
+	 			function(error, err){
+	 				Vtiger_Helper_Js.showPnotify({'message' : 'UPS!','error':'Ocurrió un error interno'});
+	 			}
+	 			);
 	 		});
 	 	}
 
@@ -340,13 +338,19 @@
 									if (data['success'] === true) {
 										var table = '<table class="table"  style="width:100%">';
 										var tuplas = data['data'];
-										table = table + '<thead><tr><th></th><th>Campo</th><th>UIType</th></tr></thead><tbody>';
+										table = table + '<thead><tr><th>Campo</th><th>UIType</th><th>Crear</th><th>Sobreescribir</th></tr></thead><tbody>';
 										if(tuplas != null)
 											tuplas.forEach(function(fila, index) {
 												table = table + '<tr>';
-												table = table + '<td style="content-aling: center"><input type="checkbox" value ='+ JSON.stringify(fila) +' /></td>';
-												table = table + '<td style="content-aling: center">'+fila['columnname']+'</td>';
+												table = table + '<td style="content-aling: center">'+fila['fieldlabel']+'</td>';
 												table = table + '<td style="content-aling: center">'+fila['uitype']+'</td>';
+												if (fila.existe === false) {
+													table = table + '<td style="content-aling: center"><input type="checkbox" value ='+ JSON.stringify(fila) +' /></td>';
+													table = table + '<td style="content-aling: center"></td>';
+												} else {
+													table = table + '<td style="content-aling: center"></td>';
+													table = table + '<td style="content-aling: center"><input type="checkbox" value ='+ JSON.stringify(fila) +' /></td>';
+												}
 												table = table + '</tr>';
 											});
 										table = table + '</tbody></table>';

@@ -50,7 +50,20 @@ class Settings_Vtiger_ConnectionExternalFields_Action extends Settings_Vtiger_Ba
 				$error = 'Error : Fallo la consulta';
 				$conexion = null;
 			}else{
+				$conexion->resetSettings();
+				$conexion->connect();
 				foreach ($result as $dato) {
+					$module = Vtiger_Module::getInstance($dato['name']);
+					if (!$module) {
+						$dato['existe'] = false;
+					}else{
+						$campo = Vtiger_Field::getInstance($dato['fieldname'], $module);
+						if(!$campo){
+							$dato['existe'] = false;
+						}else{
+							$dato['existe'] = true;
+						}
+					}
 					$tuplas[] = $dato;
 				}
 			}
