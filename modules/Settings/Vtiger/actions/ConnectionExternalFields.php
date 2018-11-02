@@ -18,11 +18,12 @@ class Settings_Vtiger_ConnectionExternalFields_Action extends Settings_Vtiger_Ba
 		$message = '';
 		$tuplas = null;
 		//realiza conexión
-		$conexion = new mysqli($host, $user, $password, $database);
-		if (mysqli_connect_errno()){
-			$error = 'Error : '.mysqli_connect_error();
+		$conexion = PearDatabase::getInstance();
+		$conexion->resetSettings('mysqli', $host, $database, $user, $password);
+		$conexion->connect();
+		if ($conexion->database->_errorMsg){
+			$error = 'Error : '.$conexion->database->_errorMsg;
 			$conexion = null;
-			die();
 		} else {
 			/*
 				realiza consulta que trae nombre de 
@@ -43,25 +44,28 @@ class Settings_Vtiger_ConnectionExternalFields_Action extends Settings_Vtiger_Ba
 				tabid
 				solo selecciona los campos con uitype 15, 16, 33
 			*/
-			$stmt = $conexion->prepare('SELECT name, columnname, uitype, fieldname, fieldlabel, typeofdata, displaytype, blocklabel, (SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = vtiger_field.columnname and table_name = vtiger_field.tablename and table_schema = ?) as tipo, (SELECT CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = vtiger_field.columnname and table_name = vtiger_field.tablename and table_schema = ?) as tamanio FROM vtiger_field, vtiger_blocks, vtiger_tab where vtiger_field.block = vtiger_blocks.blockid and vtiger_field.uitype in ("15", "16", "33") and vtiger_field.tabid = ? and vtiger_field.tabid = vtiger_tab.tabid;');
-			//inserta los bindparams que reemplazan los ?
-			//"ssi" representa los tipos de datos, string string int
-			$stmt->bind_param("ssi", $database, $database, $idModulo);
-			$stmt->execute();
-			if($result = $stmt->get_result()){
-				while ($fila = $result->fetch_object()) {
-					$tuplas[] = $fila;
-				}
-			}else{
-				$error = mysqli_error($conexion);
+			$consulta = 'SELECT name, columnname, uitype, fieldname, fieldlabel, typeofdata, displaytype, blocklabel, (SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = vtiger_field.columnname and table_name = vtiger_field.tablename and table_schema = ?) as tipo, (SELECT CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = vtiger_field.columnname and table_name = vtiger_field.tablename and table_schema = ?) as tamanio FROM vtiger_field, vtiger_blocks, vtiger_tab where vtiger_field.block = vtiger_blocks.blockid and vtiger_field.uitype in ("15", "16", "33") and vtiger_field.tabid = ? and vtiger_field.tabid = vtiger_tab.tabid;';
+			$result	= $conexion->pquery($consulta, array($database, $database, $idModulo));
+			if(!$result){
+				$error = 'Error : Fallo la consulta';
 				$conexion = null;
+			}else{
+				foreach ($result as $dato) {
+					$tuplas[] = $dato;
+				}
 			}
 		}
-		if($conexion !== null){
+		if($conexion != null){
 			$responce->setResult(array('success'=>true, 'data'=> $tuplas));
 		}else{
-			$responce->setResult(array('success'=>false, 'message'=> "No se puede conectar con el servidor", 'error' => $error));
+			if($message == '')
+				$responce->setResult(array('success'=>false, 'message'=> "No se puede conectar con el servidor", 'error' => $error));
+			else
+				$responce->setResult(array('success'=>false, 'message'=> $message, 'error' => $error));
+			$conexion = PearDatabase::getInstance();
 		}
+		$conexion->resetSettings();
+		$conexion->connect();
 		$responce->emit();
 	}
 

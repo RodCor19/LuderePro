@@ -64,39 +64,39 @@
 	 	return aDeferred.promise();
 	 },
 	 /* esta funcion envia los datos obtenidos de cada input en la funcion siguiente
-	 	creando los campos si no existen, y si existen, sobreescribe los valores del
-	 	picklist
-	 */
-	 enviarCampos: function(fila){
-	 	var aDeferred = jQuery.Deferred();
-	 	var params = {
-	 		'module' : 'Vtiger',
-	 		'parent' : 'Settings',
-	 		'action' : 'ConnectionExternalImport',
-	 		'tupla' : fila  
-	 	}
-	 	AppConnector.request(params).then(
-	 		function(data) {
-	 			if(data !== null && data['success'] === true){
-	 				aDeferred.resolve(data['result']);
-	 			}else{
-	 				if (data === null) {
-	 					aDeferred.reject({'message' : 'UPS! sucedió un error interno','error':'Verifique los campos seleccionados'});
-	 				} else {
-	 					aDeferred.reject(data['result']);
-	 				}
-	 			}
-	 		},
-	 		function(error,err){
-	 			aDeferred.reject();
-	 		}
-	 		);
+	  * creando los campos si no existen, y si existen, sobreescribe los valores del
+	  *	picklist
+	  */
+	  enviarCampos: function(fila){
+	  	var aDeferred = jQuery.Deferred();
+	  	var params = {
+	  		'module' : 'Vtiger',
+	  		'parent' : 'Settings',
+	  		'action' : 'ConnectionExternalImport',
+	  		'tupla' : fila  
+	  	}
+	  	AppConnector.request(params).then(
+	  		function(data) {
+	  			if(data !== null && data['success'] === true){
+	  				aDeferred.resolve(data['result']);
+	  			}else{
+	  				if (data === null) {
+	  					aDeferred.reject({'message' : 'UPS! sucedió un error interno','error':'Verifique los campos seleccionados'});
+	  				} else {
+	  					aDeferred.reject(data['result']);
+	  				}
+	  			}
+	  		},
+	  		function(error,err){
+	  			aDeferred.reject(data['result']);
+	  		}
+	  		);
 
-	 	return aDeferred.promise();
-	 },
-	 /*	esta funcion se llama desde el evento onclick del boton importar
-	 	consulta que checkbox del div table están seleccionados y hace un
-	 	ajax por cada uno
+	  	return aDeferred.promise();
+	  },
+	/*	esta funcion se llama desde el evento onclick del boton importar
+	 * 	consulta que checkbox del div table están seleccionados y hace un
+	 *	ajax por cada uno
 	 */
 	 importFields: function() {
 	 	var thisInstance = this;
@@ -105,26 +105,26 @@
 	 		$.each(campos, function(index, fila) {
 	 			thisInstance.enviarCampos(fila.value).then(
 	 				function(data) {
-						var params = null;
-						var datosJson = JSON.parse(fila.value);
-						if(data.creacion)
-							params = {
-								text: 'Se creó el campo '+datosJson['fieldlabel']
-							};
-						if(data.reescritura)
-							params = {
-								text: 'Se sobreescribieron los valores del campo '+datosJson['fieldlabel']
-							};
-						//envía un mensaje en pantalla
-						Settings_Vtiger_Index_Js.showMessage(params);
-	 				},
-	 				function(error, err) {
-	 					Vtiger_Helper_Js.showPnotify({
-	 						title: error['message'],
-	 						text: error['error']
-	 					});
-	 				}
-	 				);
+	 					var params = null;
+	 					var datosJson = JSON.parse(fila.value);
+	 					if(data.creacion)
+	 						params = {
+	 							text: 'Se creó el campo '+datosJson['fieldlabel']
+	 						};
+	 						if(data.reescritura)
+	 							params = {
+	 								text: 'Se sobreescribieron los valores del campo '+datosJson['fieldlabel']
+	 							};
+							//envía un mensaje en pantalla
+							Settings_Vtiger_Index_Js.showMessage(params);
+						},
+						function(error, err) {
+							Vtiger_Helper_Js.showPnotify({
+								title: error['message'],
+								text: error['error']
+							});
+						}
+						);
 	 		});
 	 	}else{
 	 		Vtiger_Helper_Js.showPnotify({
@@ -136,48 +136,48 @@
 	 registerEvents: function() {
 	 	//funcion de cargar los campos del select con los nombres de los modulos
 	 	/* 	obtiene el id del modulo seleccionado que se encuentra en el value del
-	 		option lo envia al action ConnectionExternalFields que devuelve un 
-	 		array de los campos con sus datos como nombre de modulo, nombre de 
-	 		bloque, nombre de la columna, nombre del campo, tipo de data, tipo de 
-	 		dato en la base de datos, etc. 
-	 	*/
-	 	var loadfields = function() {
-	 		var aDeferred = jQuery.Deferred();
-	 		var idModulo = $('#selectModulesName').val();
-	 		if (idModulo  !== "none") {
-	 			var params = {
-	 				'module' : 'Vtiger',
-	 				'parent' : 'Settings',
-	 				'action' : 'ConnectionExternalFields',
-	 				'dbmoduloid' : idModulo 
-	 			}
-	 			AppConnector.request(params).then(
-	 				function(data) {
-	 					if(data !== null && data['success'] === true){
-	 						aDeferred.resolve(data['result']);
-	 					}else{
-	 						if (data === null) {
-	 							aDeferred.reject({'message' : 'UPS!','error':'Ocurrió un error interno'});
-	 						} else {
-	 							var mensaje = {
-	 								'message' : data['result']['message'],
-	 								'error': data['result']['error']
-	 							};
-	 							aDeferred.reject();
-	 						}
-	 					}
-	 				},
-	 				function(error,err){
-	 					aDeferred.reject({'message' : 'UPS!','error':'Ocurrió un error interno'});
-	 				}
-	 				);
-	 		} else {
-	 			aDeferred.reject({'message' : 'No ha seleccionado un modulo','error':'Seleccione un modulo'});
-	 		}
+	 	 *	option lo envia al action ConnectionExternalFields que devuelve un 
+	 	 *	array de los campos con sus datos como nombre de modulo, nombre de 
+	 	 *	bloque, nombre de la columna, nombre del campo, tipo de data, tipo de 
+	 	 *	dato en la base de datos, etc. 
+	 	 */
+	 	 var loadfields = function() {
+	 	 	var aDeferred = jQuery.Deferred();
+	 	 	var idModulo = $('#selectModulesName').val();
+	 	 	if (idModulo  !== "none") {
+	 	 		var params = {
+	 	 			'module' : 'Vtiger',
+	 	 			'parent' : 'Settings',
+	 	 			'action' : 'ConnectionExternalFields',
+	 	 			'dbmoduloid' : idModulo 
+	 	 		}
+	 	 		AppConnector.request(params).then(
+	 	 			function(data) {
+	 	 				if(data !== null && data['success'] === true){
+	 	 					aDeferred.resolve(data['result']);
+	 	 				}else{
+	 	 					if (data === null) {
+	 	 						aDeferred.reject({'message' : 'UPS!','error':'Ocurrió un error interno'});
+	 	 					} else {
+	 	 						var mensaje = {
+	 	 							'message' : data['result']['message'],
+	 	 							'error': data['result']['error']
+	 	 						};
+	 	 						aDeferred.reject();
+	 	 					}
+	 	 				}
+	 	 			},
+	 	 			function(error,err){
+	 	 				aDeferred.reject({'message' : 'UPS!','error':'Ocurrió un error interno'});
+	 	 			}
+	 	 			);
+	 	 	} else {
+	 	 		aDeferred.reject({'message' : 'No ha seleccionado un modulo','error':'Seleccione un modulo'});
+	 	 	}
 
-	 		return aDeferred.promise();
-	 	};
-	 	var thisInstance = this;
+	 	 	return aDeferred.promise();
+	 	 };
+	 	 var thisInstance = this;
 	 	//selecciona div qe contiene los datos de conexión
 	 	var divContent = $('#fields');
 	 	//selecciona botones
@@ -196,9 +196,9 @@
 		// onchange en select si trae cargados los modulos en la vista
 	 	/* llama a funcion loadfields
 	 	*/
-		if($('#selectModulesName').children().length > 1){
-			$('#selectModulesName').change(function(e) {
-				loadfields().then(
+	 	if($('#selectModulesName').children().length > 1){
+	 		$('#selectModulesName').change(function(e) {
+	 			loadfields().then(
 					//callback si hubo 200 OK
 					function(data) {
 						//consulta si no hubo error en el action
@@ -242,9 +242,9 @@
 						//muestra un mensaje de error
 						Vtiger_Helper_Js.showPnotify({'message' : 'UPS!','error':'Ocurrió un error interno'});
 					}
-				);
-			});
-		}
+					);
+	 		});
+	 	}
 
 		// on click del botón cancelar en la parte superior
 		cancelButton.click(function(e) {
@@ -273,7 +273,7 @@
 			});
 			//quita el estilo al div tabla
 			$('#table').attr('style', '');
-							
+
 		});
 
 		//botón import, realiza la tarea importFields
@@ -433,6 +433,6 @@ jQuery(document).ready(function(e){
 	var instance = new Settings_Vtiger_DBExternal_Js();
 	/*	se carga automaticamente, no descomentar
 		produce que los eventos en componentes se carguen dos veces
-	*/
+		*/
  	//instance.registerEvents();
  })

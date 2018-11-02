@@ -10,39 +10,47 @@
  ************************************************************************************/
 
 class Settings_Vtiger_DBExternal_View extends Settings_Vtiger_Index_View {
-    
-    public function process(Vtiger_Request $request) {        
-        $qualifiedModuleName = $request->getModule(false);
-        $datos = null;
-        if(file_exists('dataBaseExports.ini')){
-        	$dbdatos = parse_ini_file('dataBaseExports.ini');
+
+	public function process(Vtiger_Request $request) {        
+		$qualifiedModuleName = $request->getModule(false);
+		$datos = null;
+		if(file_exists('dataBaseExports.ini')){
+			$dbdatos = parse_ini_file('dataBaseExports.ini');
 			$host = $dbdatos['host'];
 			$database = $dbdatos['database'];
 			$user = $dbdatos['user'];
 			$password = $dbdatos['password'];
-        	$conexion = new mysqli($host, $user, $password, $database);
-			if (mysqli_connect_errno()){
-				die();
+			$conexion = PearDatabase::getInstance();
+			$conexion->resetSettings('mysqli', $host, $database, $user, $password);
+			$conexion->connect();
+			if ($conexion->database->_errorMsg){
+				$conexion->resetSettings();
+				$conexion->connect();
 			} else {
-				if($result = $conexion->query('SELECT tabid, name FROM vtiger_tab WHERE presence in (0, 2);')){
-					while ($fila = $result->fetch_object()) {
+				$result	= $conexion->pquery('SELECT tabid, name FROM vtiger_tab WHERE presence in (0, 2);');
+				if(!$result){
+					$conexion = null;
+				}else{
+					foreach ($result as $dato) {
 						$data = null;
-						foreach ($fila as $key => $value) {
+						foreach ($dato as $key => $value) {
 							if ($key == 'name') {
 								$data[$key] = vtranslate($value);
 							}else{
 								$data[$key] = $value;
 							}
 						}
-						$datos[] = $data;
+						$datos[] = $dato;
 					}
+					$conexion->resetSettings();
+					$conexion->connect();
 				}
 			}
-        }
-        $viewer = $this->getViewer($request);
-        $viewer->assign('datos', $datos);
-        $viewer->view('DBExternal.tpl',$qualifiedModuleName);
-    }
+		}
+		$viewer = $this->getViewer($request);
+		$viewer->assign('datos', $datos);
+		$viewer->view('DBExternal.tpl',$qualifiedModuleName);
+	}
 	
 	function getPageTitle(Vtiger_Request $request) {
 		$qualifiedModuleName = $request->getModule(false);
@@ -75,5 +83,5 @@ class Settings_Vtiger_DBExternal_View extends Settings_Vtiger_Index_View {
   		$cssInstances = $this->checkAndConvertCssStyles($cssFileNames);
  		$headerCssInstances = array_merge($headerCssInstances, $cssInstances);
  		return $headerCssInstances;
-  	}*/
-}
+ 	}*/
+ }
