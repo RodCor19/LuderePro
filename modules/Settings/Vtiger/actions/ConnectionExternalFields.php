@@ -64,6 +64,8 @@ class Settings_Vtiger_ConnectionExternalFields_Action extends Settings_Vtiger_Ba
 							$dato['existe'] = true;
 						}
 					}
+					$dato[4] = str_replace( ' ', '*' , $dato[4]);
+					$dato['fieldlabel'] = str_replace( ' ', '*' , $dato['fieldlabel']);  
 					$tuplas[] = $dato;
 				}
 			}

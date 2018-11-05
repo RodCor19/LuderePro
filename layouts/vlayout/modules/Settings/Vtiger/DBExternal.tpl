@@ -38,7 +38,11 @@
                         <label class="muted pull-right marginRight10px">{vtranslate('LBL_HOST', $QUALIFIED_MODULE)} :</label>
                     </td>
                     <td class="" style="border-left: none;">
-                        <span></span>
+                        <span>
+                            {if isset($dbdatos)}
+                                <label>{$dbdatos['host']}</label>
+                            {/if}
+                        </span>
                     </td>
                 </tr>
                 <tr>
@@ -46,7 +50,8 @@
                         <label class="muted pull-right marginRight10px">{vtranslate('LBL_PORT', $QUALIFIED_MODULE)} :</label>
                     </td>
                     <td class="" style="border-left: none;">
-                        <span></span>
+                        <span>
+                        </span>
                     </td>
                 </tr>
                 <tr>
@@ -54,7 +59,11 @@
                         <label class="muted pull-right marginRight10px">{vtranslate('LBL_USER', $QUALIFIED_MODULE)} :</label>
                     </td>
                     <td class="" style="border-left: none;">
-                        <span></span>
+                        <span>
+                            {if isset($dbdatos)}
+                                <label>{$dbdatos['user']}</label>
+                            {/if}
+                        </span>
                     </td>
                 </tr>
                 <tr>
@@ -62,7 +71,11 @@
                         <label class="muted pull-right marginRight10px">{vtranslate('LBL_PASSWORD', $QUALIFIED_MODULE)} :</label>
                     </td>
                     <td class="" style="border-left: none;">
-                        <span class="password"></span>
+                        <span class="password">
+                            {if isset($dbdatos)}
+                                <label>{str_repeat('*', strlen($dbdatos['password']))}</label>
+                            {/if}
+                        </span>
                     </td>
                 </tr>
                 <tr>
@@ -71,7 +84,9 @@
                     </td>
                     <td class="" style="border-left: none;">
                         <span>
-                            
+                            {if isset($dbdatos)}
+                                <label>{$dbdatos['database']}</label>
+                            {/if}
                         </span>
                     </td>
                 </tr>

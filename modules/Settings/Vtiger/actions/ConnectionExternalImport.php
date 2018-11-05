@@ -66,7 +66,7 @@ class Settings_Vtiger_ConnectionExternalImport_Action extends Settings_Vtiger_Ba
 									//no existe y lo crea
 							$campo = new Vtiger_Field();
 							$campo->name = $tupla['fieldname'];
-							$campo->label = $tupla['fieldlabel'];
+							$campo->label = str_replace( '*', ' ' , $tupla['fieldlabel']);
 							$campo->table = $module->basetable;
 							$campo->column = $tupla['columnname'];
 							$campo->columntype = strtoupper($tupla['tipo']).'('.$tupla['tamanio'].')';

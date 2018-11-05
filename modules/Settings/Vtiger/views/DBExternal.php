@@ -14,6 +14,7 @@ class Settings_Vtiger_DBExternal_View extends Settings_Vtiger_Index_View {
 	public function process(Vtiger_Request $request) {        
 		$qualifiedModuleName = $request->getModule(false);
 		$datos = null;
+		$dbdatos = null;
 		if(file_exists('dataBaseExports.ini')){
 			$dbdatos = parse_ini_file('dataBaseExports.ini');
 			$host = $dbdatos['host'];
@@ -42,6 +43,7 @@ class Settings_Vtiger_DBExternal_View extends Settings_Vtiger_Index_View {
 		}
 		$viewer = $this->getViewer($request);
 		$viewer->assign('datos', $datos);
+		$viewer->assign('dbdatos', $dbdatos);
 		$viewer->view('DBExternal.tpl',$qualifiedModuleName);
 	}
 	

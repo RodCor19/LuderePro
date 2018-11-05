@@ -109,11 +109,11 @@
 	 					var datosJson = JSON.parse(fila.value);
 	 					if(data.creacion)
 	 						params = {
-	 							text: 'Se creó el campo '+datosJson['fieldlabel']
+	 							text: 'Se creó el campo ' + datosJson['fieldlabel'].replace('*', ' ')
 	 						};
 	 						if(data.reescritura)
 	 							params = {
-	 								text: 'Se sobreescribieron los valores del campo '+datosJson['fieldlabel']
+	 								text: 'Se sobreescribieron los valores del campo '+ datosJson['fieldlabel'].replace('*', ' ')
 	 							};
 							//envía un mensaje en pantalla
 							Settings_Vtiger_Index_Js.showMessage(params);
@@ -212,7 +212,7 @@
 	 						//crea fila a fila
 	 					tuplas.forEach(function(fila, index) {
 	 						table = table + '<tr>';
-	 						table = table + '<td style="content-aling: center">'+fila['fieldlabel']+'</td>';
+	 						table = table + '<td style="content-aling: center">'+fila['fieldlabel'].replace('*', ' ')+'</td>';
 	 						table = table + '<td style="content-aling: center">'+fila['uitype']+'</td>';
 	 						if (fila.existe === false) {
 	 							table = table + '<td style="content-aling: center"><input type="checkbox" value ='+ JSON.stringify(fila) +' /></td>';
@@ -408,6 +408,7 @@
 			//por cada fila se agrega el input en la segunda columna
 			trs.each(function(index) {
 				var td = $( this ).children().next().children();
+				td.empty();
 				//se inserta el input con su correspondiente en array
 				td.append(array[index]);
 				//al segundo input correspondiente al index 1
