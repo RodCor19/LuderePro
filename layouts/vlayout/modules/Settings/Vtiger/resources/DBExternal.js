@@ -63,10 +63,119 @@
 
 	 	return aDeferred.promise();
 	 },
-	 /* esta funcion envia los datos obtenidos de cada input en la funcion siguiente
-	  * creando los campos si no existen, y si existen, sobreescribe los valores del
-	  *	picklist
-	  */
+	  	//funcion de cargar los campos del select con los nombres de los modulos
+	 	/* 	obtiene el id del modulo seleccionado que se encuentra en el value del
+	 	 *	option lo envia al action ConnectionExternalFields que devuelve un 
+	 	 *	array de los campos con sus datos como nombre de modulo, nombre de 
+	 	 *	bloque, nombre de la columna, nombre del campo, tipo de data, tipo de 
+	 	 *	dato en la base de datos, etc. 
+	 	 */
+	 	loadfields : function() {
+	 	 	var aDeferred = jQuery.Deferred();
+	 	 	var idModulo = $('#selectModulesName').val();
+	 	 	if (idModulo  !== "none") {
+	 	 		var params = {
+	 	 			'module' : 'Vtiger',
+	 	 			'parent' : 'Settings',
+	 	 			'action' : 'ConnectionExternalFields',
+	 	 			'dbmoduloid' : idModulo 
+	 	 		}
+	 	 		AppConnector.request(params).then(
+	 	 			function(data) {
+	 	 				if(data !== null && data['success'] === true){
+	 	 					aDeferred.resolve(data['result']);
+	 	 				}else{
+	 	 					if (data === null) {
+	 	 						aDeferred.reject({'message' : 'UPS!','error':'Ocurrió un error interno'});
+	 	 					} else {
+	 	 						var mensaje = {
+	 	 							'message' : data['result']['message'],
+	 	 							'error': data['result']['error']
+	 	 						};
+	 	 						aDeferred.reject();
+	 	 					}
+	 	 				}
+	 	 			},
+	 	 			function(error,err){
+	 	 				aDeferred.reject({'message' : 'UPS!','error':'Ocurrió un error interno'});
+	 	 			}
+	 	 			);
+	 	 	} else {
+	 	 		aDeferred.reject({'message' : 'No ha seleccionado un modulo','error':'Seleccione un modulo'});
+	 	 	}
+
+	 	 	return aDeferred.promise();
+	 	 }
+	  ,
+
+	  selectOnChange: function() {
+	  	var thisInstance = this;
+	  	var importButton = $('#buttons').children().first();
+	 	var cancelButton2 = importButton.next();
+	  	thisInstance.loadfields().then(
+	 			//callback 200 OK
+	 			function(data) {
+	 				//action todo bien
+	 				if (data['success'] === true) {
+	 					//crea tabla
+	 					var table = '<table class="table"  style="width:100%">';
+	 					//toma array
+	 					var tuplas = data['data'];
+	 					table = table + '<thead><tr><th>Campo</th><th>UIType</th><th>Crear</th><th>Sobreescribir</th></tr></thead><tbody>';
+	 					if(tuplas != null)
+	 						//crea fila a fila
+	 						tuplas.forEach(function(fila, index) {
+	 							table = table + '<tr>';
+	 							table = table + '<td style="content-aling: center">'+fila['fieldlabel'].replace('*', ' ')+'</td>';
+	 							table = table + '<td style="content-aling: center">'+fila['uitype']+'</td>';
+	 							if (fila.existe === false) {
+	 								table = table + '<td style="content-aling: center"><input type="checkbox" value ='+ JSON.stringify(fila) +' /></td>';
+	 								table = table + '<td style="content-aling: center"></td>';
+	 							} else {
+	 								table = table + '<td style="content-aling: center"></td>';
+	 								table = table + '<td style="content-aling: center"><input type="checkbox" value ='+ JSON.stringify(fila) +' /></td>';
+	 							}
+	 							table = table + '</tr>';
+	 						});
+	 					table = table + '</tbody></table>';
+	 					var tableWF = '<table class="table"  style="width:100%">';
+	 					var tuplas = data['workflows'];
+	 					tableWF = tableWF + '<thead><tr><th>WorkFlow</th><th>Importar</th></tr></thead><tbody>';
+	 					if(tuplas != null)
+	 						tuplas.forEach(function(fila, index) {
+	 							tableWF = tableWF + '<tr>';
+	 							tableWF = tableWF + '<td style="content-aling: center">'+fila['description']+'</td>';
+	 							tableWF = tableWF + '<td style="content-aling: center"><input type="checkbox" value ='+ fila['id'] +' /></td>';
+	  							tableWF = tableWF + '</tr>';
+	 						});
+	 					tableWF = tableWF + '</tbody></table>';
+	 					$('#table').empty();
+	 					$('#table').attr('style', 'overflow:scroll; height:300px; width:100%;');
+	 					$('#table').append(table);
+	 					$('#workflow').empty();
+	 					$('#workflow').attr('style', 'overflow:scroll; height:150px; width:100%;');
+	 					$('#workflow').append(tableWF);
+	 					cancelButton2.attr('disabled', false);
+	 					importButton.attr('disabled', false);
+	 				} else {
+	 					Vtiger_Helper_Js.showPnotify({
+	 						title: data['message'],
+	 						text: data['error']
+	 					});
+	 				}
+	 			},
+	 			//callback no 200 OK
+	 			function(error, err){
+	 				Vtiger_Helper_Js.showPnotify({'message' : 'UPS!','error':'Ocurrió un error interno'});
+	 			}
+	 			);
+	  }
+
+	  ,
+	 	/* esta funcion envia los datos obtenidos de cada input en la funcion siguiente
+	  	 * creando los campos si no existen, y si existen, sobreescribe los valores del
+	  	 * picklist
+		 */
 	  enviarCampos: function(fila){
 	  	var aDeferred = jQuery.Deferred();
 	  	var params = {
@@ -74,6 +183,34 @@
 	  		'parent' : 'Settings',
 	  		'action' : 'ConnectionExternalImport',
 	  		'tupla' : fila  
+	  	}
+	  	AppConnector.request(params).then(
+	  		function(data) {
+	  			if(data !== null && data['success'] === true){
+	  				aDeferred.resolve(data['result']);
+	  			}else{
+	  				if (data === null) {
+	  					aDeferred.reject({'message' : 'UPS! sucedió un error interno','error':'Verifique los campos seleccionados'});
+	  				} else {
+	  					aDeferred.reject(data['result']);
+	  				}
+	  			}
+	  		},
+	  		function(error,err){
+	  			aDeferred.reject(data['result']);
+	  		}
+	  		);
+
+	  	return aDeferred.promise();
+	  },
+
+	  enviarWF: function(array){
+	  	var aDeferred = jQuery.Deferred();
+	  	var params = {
+	  		'module' : 'Vtiger',
+	  		'parent' : 'Settings',
+	  		'action' : 'ConnectionExternalWorkFlows',
+	  		'tupla' : array  
 	  	}
 	  	AppConnector.request(params).then(
 	  		function(data) {
@@ -111,20 +248,20 @@
 	 						params = {
 	 							text: 'Se creó el campo ' + datosJson['fieldlabel'].replace('*', ' ')
 	 						};
-	 						if(data.reescritura)
-	 							params = {
-	 								text: 'Se sobreescribieron los valores del campo '+ datosJson['fieldlabel'].replace('*', ' ')
-	 							};
+	 					if(data.reescritura)
+	 						params = {
+	 							text: 'Se sobreescribieron los valores del campo '+ datosJson['fieldlabel'].replace('*', ' ')
+	 						};
 							//envía un mensaje en pantalla
-							Settings_Vtiger_Index_Js.showMessage(params);
-						},
-						function(error, err) {
-							Vtiger_Helper_Js.showPnotify({
-								title: error['message'],
-								text: error['error']
-							});
-						}
-						);
+						Settings_Vtiger_Index_Js.showMessage(params);
+					},
+					function(error, err) {
+						Vtiger_Helper_Js.showPnotify({
+							title: error['message'],
+							text: error['error']
+						});
+					}
+				);
 	 		});
 	 	}else{
 	 		Vtiger_Helper_Js.showPnotify({
@@ -133,51 +270,40 @@
 	 		});
 	 	}
 	 },
-	 registerEvents: function() {
-	 	//funcion de cargar los campos del select con los nombres de los modulos
-	 	/* 	obtiene el id del modulo seleccionado que se encuentra en el value del
-	 	 *	option lo envia al action ConnectionExternalFields que devuelve un 
-	 	 *	array de los campos con sus datos como nombre de modulo, nombre de 
-	 	 *	bloque, nombre de la columna, nombre del campo, tipo de data, tipo de 
-	 	 *	dato en la base de datos, etc. 
-	 	 */
-	 	 var loadfields = function() {
-	 	 	var aDeferred = jQuery.Deferred();
-	 	 	var idModulo = $('#selectModulesName').val();
-	 	 	if (idModulo  !== "none") {
-	 	 		var params = {
-	 	 			'module' : 'Vtiger',
-	 	 			'parent' : 'Settings',
-	 	 			'action' : 'ConnectionExternalFields',
-	 	 			'dbmoduloid' : idModulo 
-	 	 		}
-	 	 		AppConnector.request(params).then(
-	 	 			function(data) {
-	 	 				if(data !== null && data['success'] === true){
-	 	 					aDeferred.resolve(data['result']);
-	 	 				}else{
-	 	 					if (data === null) {
-	 	 						aDeferred.reject({'message' : 'UPS!','error':'Ocurrió un error interno'});
-	 	 					} else {
-	 	 						var mensaje = {
-	 	 							'message' : data['result']['message'],
-	 	 							'error': data['result']['error']
-	 	 						};
-	 	 						aDeferred.reject();
-	 	 					}
-	 	 				}
-	 	 			},
-	 	 			function(error,err){
-	 	 				aDeferred.reject({'message' : 'UPS!','error':'Ocurrió un error interno'});
-	 	 			}
-	 	 			);
-	 	 	} else {
-	 	 		aDeferred.reject({'message' : 'No ha seleccionado un modulo','error':'Seleccione un modulo'});
-	 	 	}
 
-	 	 	return aDeferred.promise();
-	 	 };
-	 	 var thisInstance = this;
+	 importWorkFlows: function() {
+	 	var thisInstance = this;
+	 	var campos =$('#workflow input:checked');
+	 	if (campos != null && campos.length > 0) {
+	 		var array = new Array();
+	 		$.each(campos, function(index, fila) {
+	 			array[index] = fila.value;
+	 		});
+	 		thisInstance.enviarWF(array).then(
+	 			function(data) {
+	 				params = {
+	 					text: 'Se importaron los workflows'
+	 				};
+	 				Settings_Vtiger_Index_Js.showMessage(params);	 				
+	 			},
+	 			function(error, err) {
+	 				Vtiger_Helper_Js.showPnotify({
+						title: error['message'],
+						text: error['error']
+					});
+	 			}
+	 		);
+
+	 	}else{
+	 		Vtiger_Helper_Js.showPnotify({
+	 			title: 'Ningún campo ha sido seleccionado',
+	 			text: 'Seleccione los campos a importar'
+	 		});
+	 	}
+	 },
+	 registerEvents: function() {
+	 	var thisInstance = this;
+	 	$('#prueba').click(thisInstance.prueba);
 	 	//selecciona div qe contiene los datos de conexión
 	 	var divContent = $('#fields');
 	 	//selecciona botones
@@ -198,49 +324,7 @@
 	 	*/
 	 	if($('#selectModulesName').children().length > 1){
 	 		$('#selectModulesName').change(function(e){
-	 			loadfields().then(
-	 			//callback 200 OK
-	 			function(data) {
-	 				//action todo bien
-	 				if (data['success'] === true) {
-	 					//crea tabla
-	 					var table = '<table class="table"  style="width:100%">';
-	 					//toma array
-	 					var tuplas = data['data'];
-	 					table = table + '<thead><tr><th>Campo</th><th>UIType</th><th>Crear</th><th>Sobreescribir</th></tr></thead><tbody>';
-	 					if(tuplas != null)
-	 						//crea fila a fila
-	 					tuplas.forEach(function(fila, index) {
-	 						table = table + '<tr>';
-	 						table = table + '<td style="content-aling: center">'+fila['fieldlabel'].replace('*', ' ')+'</td>';
-	 						table = table + '<td style="content-aling: center">'+fila['uitype']+'</td>';
-	 						if (fila.existe === false) {
-	 							table = table + '<td style="content-aling: center"><input type="checkbox" value ='+ JSON.stringify(fila) +' /></td>';
-	 							table = table + '<td style="content-aling: center"></td>';
-	 						} else {
-	 							table = table + '<td style="content-aling: center"></td>';
-	 							table = table + '<td style="content-aling: center"><input type="checkbox" value ='+ JSON.stringify(fila) +' /></td>';
-	 						}
-	 						table = table + '</tr>';
-	 					});
-	 					table = table + '</tbody></table>';
-	 					$('#table').empty();
-	 					$('#table').attr('style', 'overflow:scroll; height:300px; width:100%;');
-	 					$('#table').append(table);
-	 					cancelButton2.attr('disabled', false);
-	 					importButton.attr('disabled', false);
-	 				} else {
-	 					Vtiger_Helper_Js.showPnotify({
-	 						title: data['message'],
-	 						text: data['error']
-	 					});
-	 				}
-	 			},
-	 			//callback no 200 OK
-	 			function(error, err){
-	 				Vtiger_Helper_Js.showPnotify({'message' : 'UPS!','error':'Ocurrió un error interno'});
-	 			}
-	 			);
+	 			thisInstance.selectOnChange();
 	 		});
 	 	}
 
@@ -250,6 +334,10 @@
 			$('#table').attr('style', '');
 			//vacía el div table
 			$('#table').empty();
+			//restaura el style al div workflow
+			$('#workflow').attr('style', '');
+			//vacía el div workflow
+			$('#workflow').empty();
 			//vacia el select con los nombres de modulos
 			$('#selectModulesName').empty().append('<option value="none">Seleccionar</option>');
 			//habilita el botón para configurar los campos de edición de la conexión
@@ -277,11 +365,14 @@
 		//botón import, realiza la tarea importFields
 		importButton.click(function(e) {
 			thisInstance.importFields();
+			thisInstance.importWorkFlows();
 		});
 
 		//botón cancelar en la parte inferior, funciona exactamente igual al superior
 		cancelButton2.click(function(e) {
 			$('#table').attr('style', '');
+			$('#workflow').attr('style', '');
+			$('#workflow').empty();
 			$('#table').empty();
 			$('#selectModulesName').empty().append('<option value="none">Seleccionar</option>');
 			editButton.attr('disabled', false);
@@ -331,45 +422,9 @@
 						options.forEach(function(campos, index) {
 							select.append('<option value="'+campos.tabid+'">'+campos.name+'</option>');
 						});
-						//crea el evento on change, ya esplicado arriba
+						//crea el evento on change
 						select.change(function(e) {
-							loadfields().then(
-								function(data) {
-									if (data['success'] === true) {
-										var table = '<table class="table"  style="width:100%">';
-										var tuplas = data['data'];
-										table = table + '<thead><tr><th>Campo</th><th>UIType</th><th>Crear</th><th>Sobreescribir</th></tr></thead><tbody>';
-										if(tuplas != null)
-											tuplas.forEach(function(fila, index) {
-												table = table + '<tr>';
-												table = table + '<td style="content-aling: center">'+fila['fieldlabel']+'</td>';
-												table = table + '<td style="content-aling: center">'+fila['uitype']+'</td>';
-												if (fila.existe === false) {
-													table = table + '<td style="content-aling: center"><input type="checkbox" value ='+ JSON.stringify(fila) +' /></td>';
-													table = table + '<td style="content-aling: center"></td>';
-												} else {
-													table = table + '<td style="content-aling: center"></td>';
-													table = table + '<td style="content-aling: center"><input type="checkbox" value ='+ JSON.stringify(fila) +' /></td>';
-												}
-												table = table + '</tr>';
-											});
-										table = table + '</tbody></table>';
-										$('#table').empty();
-										$('#table').attr('style', 'overflow:scroll; height:300px; width:100%;');
-										$('#table').append(table);
-										cancelButton2.attr('disabled', false);
-										importButton.attr('disabled', false);
-									} else {
-										Vtiger_Helper_Js.showPnotify({
-											title: data['message'],
-											text: data['error']
-										});
-									}
-								},
-								function(error, err){
-									Vtiger_Helper_Js.showPnotify({'message' : 'UPS!','error':'Ocurrió un error interno'});
-								}
-								);
+							thisInstance.selectOnChange();
 						});
 						//saca la clase hide del div abuelo del select y muestra select y botones
 						$('#dataDB').removeClass('hide');

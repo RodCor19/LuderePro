@@ -103,7 +103,7 @@
     </div>
     <hr>
     <div id='dataDB' class="contents row-fluid {if !isset($datos)}hide{/if}">
-        <div>
+        <div class="span12">
             <div class="span6">
                 <h4 class="pull-right" style="margin-top: 5px;">{vtranslate('LBL_SELECTMODULESNAME', $QUALIFIED_MODULE)}</h4>
             </div>
@@ -119,6 +119,10 @@
             </div>
         </div>
         <div id="table">
+          
+        </div>
+        <hr>
+        <div id="workflow">
             
         </div>
         <div id="buttons" class="widget_header pull-right">
@@ -129,7 +133,9 @@
                 {vtranslate('LBL_CANCEL', $QUALIFIED_MODULE)}
             </button>
         </div>
-
+            <!--<button id='prueba' style="margin-top: 5px;" class="alignRight btn btn-success">
+                Prueba
+            </button>-->
     </div>
 </div>
 {/strip}

@@ -45,7 +45,8 @@ class Settings_Vtiger_ConnectionExternalDB_Action extends Settings_Vtiger_Basic_
 		$conexion = PearDatabase::getInstance();
 		}
 		$conexion->resetSettings();
-		$conexion->connect();$responce->emit();
+		$conexion->connect();
+		$responce->emit();
 	}
 
 	public function validateRequest(Vtiger_Request $request) { 

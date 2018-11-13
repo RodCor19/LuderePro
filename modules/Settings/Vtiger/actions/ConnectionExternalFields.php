@@ -6,6 +6,7 @@ class Settings_Vtiger_ConnectionExternalFields_Action extends Settings_Vtiger_Ba
 		$responce = new Vtiger_Response();
 		//toma los datos para la conexión desde el archivo
 		$datos = parse_ini_file('dataBaseExports.ini');
+		$workflows = null;
 		//toma los datos del array datos
 		$host = $datos['host'];
 		$database = $datos['database'];
@@ -25,6 +26,14 @@ class Settings_Vtiger_ConnectionExternalFields_Action extends Settings_Vtiger_Ba
 			$error = 'Error : '.$conexion->database->_errorMsg;
 			$conexion = null;
 		} else {
+			//obtener el nombre del modulo
+			$consulta = 'SELECT name FROM vtiger_tab WHERE vtiger_tab.tabid = ?';
+			$result	= $conexion->pquery($consulta, array($idModulo));
+			$modulo = $result->fields[0];
+			vimport('~~modules/com_vtiger_workflow/VTWorkflowManager.inc');
+			$wfm = new VTWorkflowManager($conexion);
+			$workflows = $wfm->getWorkflowsForModule($modulo);
+
 			/*
 				realiza consulta que trae nombre de 
 				name => nombre de modulo,
@@ -44,7 +53,7 @@ class Settings_Vtiger_ConnectionExternalFields_Action extends Settings_Vtiger_Ba
 				tabid
 				solo selecciona los campos con uitype 15, 16, 33
 			*/
-			$consulta = 'SELECT name, columnname, uitype, fieldname, fieldlabel, typeofdata, displaytype, blocklabel, (SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = vtiger_field.columnname and table_name = vtiger_field.tablename and table_schema = ?) as tipo, (SELECT CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = vtiger_field.columnname and table_name = vtiger_field.tablename and table_schema = ?) as tamanio FROM vtiger_field, vtiger_blocks, vtiger_tab where vtiger_field.block = vtiger_blocks.blockid and vtiger_field.uitype in ("15", "16", "33") and vtiger_field.tabid = ? and vtiger_field.tabid = vtiger_tab.tabid;';
+			$consulta = 'SELECT columnname, uitype, fieldname, fieldlabel, typeofdata, displaytype, blocklabel, (SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = vtiger_field.columnname and table_name = vtiger_field.tablename and table_schema = ?) as tipo, (SELECT CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = vtiger_field.columnname and table_name = vtiger_field.tablename and table_schema = ?) as tamanio FROM vtiger_field, vtiger_blocks where vtiger_field.block = vtiger_blocks.blockid and vtiger_field.uitype in ("15", "16", "33") and vtiger_field.tabid = ?';
 			$result	= $conexion->pquery($consulta, array($database, $database, $idModulo));
 			if(!$result){
 				$error = 'Error : Fallo la consulta';
@@ -53,7 +62,7 @@ class Settings_Vtiger_ConnectionExternalFields_Action extends Settings_Vtiger_Ba
 				$conexion->resetSettings();
 				$conexion->connect();
 				foreach ($result as $dato) {
-					$module = Vtiger_Module::getInstance($dato['name']);
+					$module = Vtiger_Module::getInstance($modulo);
 					if (!$module) {
 						$dato['existe'] = false;
 					}else{
@@ -64,6 +73,7 @@ class Settings_Vtiger_ConnectionExternalFields_Action extends Settings_Vtiger_Ba
 							$dato['existe'] = true;
 						}
 					}
+					$dato['name'] = $modulo;
 					$dato[4] = str_replace( ' ', '*' , $dato[4]);
 					$dato['fieldlabel'] = str_replace( ' ', '*' , $dato['fieldlabel']);  
 					$tuplas[] = $dato;
@@ -71,7 +81,7 @@ class Settings_Vtiger_ConnectionExternalFields_Action extends Settings_Vtiger_Ba
 			}
 		}
 		if($conexion != null){
-			$responce->setResult(array('success'=>true, 'data'=> $tuplas));
+			$responce->setResult(array('success'=>true, 'data'=> $tuplas, 'workflows' => $workflows));
 		}else{
 			if($message == '')
 				$responce->setResult(array('success'=>false, 'message'=> "No se puede conectar con el servidor", 'error' => $error));
