@@ -268,6 +268,7 @@
 					}
 				);
 	 		});
+	 		fila.attr('checked', true);
 	 	}
 	 },
 
@@ -278,6 +279,7 @@
 	 		var array = new Array();
 	 		$.each(campos, function(index, fila) {
 	 			array[index] = fila.value;
+	 			fila.attr('checked', true);
 	 		});
 	 		thisInstance.enviarWF(array).then(
 	 			function(data) {
