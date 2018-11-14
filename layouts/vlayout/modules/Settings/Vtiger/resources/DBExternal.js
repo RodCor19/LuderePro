@@ -210,7 +210,7 @@
 	  		'module' : 'Vtiger',
 	  		'parent' : 'Settings',
 	  		'action' : 'ConnectionExternalWorkFlows',
-	  		'tupla' : array  
+	  		'dbwfs' : array  
 	  	}
 	  	AppConnector.request(params).then(
 	  		function(data) {
@@ -263,11 +263,6 @@
 					}
 				);
 	 		});
-	 	}else{
-	 		Vtiger_Helper_Js.showPnotify({
-	 			title: 'Ningún campo ha sido seleccionado',
-	 			text: 'Seleccione los campos a importar'
-	 		});
 	 	}
 	 },
 
@@ -294,11 +289,6 @@
 	 			}
 	 		);
 
-	 	}else{
-	 		Vtiger_Helper_Js.showPnotify({
-	 			title: 'Ningún campo ha sido seleccionado',
-	 			text: 'Seleccione los campos a importar'
-	 		});
 	 	}
 	 },
 	 registerEvents: function() {

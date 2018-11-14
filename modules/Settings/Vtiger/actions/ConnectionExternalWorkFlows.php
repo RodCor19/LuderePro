@@ -3,17 +3,20 @@ class Settings_Vtiger_ConnectionExternalWorkFlows_Action extends Settings_Vtiger
 	
 	
 	public function process(Vtiger_Request $request) {
+		$responce = new Vtiger_Response();
 		$datos = parse_ini_file('dataBaseExports.ini');
 		$host = $datos['host'];
 		$database = $datos['database'];
 		$user = $datos['user'];
 		$password = $datos['password'];
-		//toma el id del modulo desde el request
+		//toma los ids modulo desde el request
 		$ids = $request->get('dbwfs');
+		system('echo '.implode(",", $ids).' > hola.txt');
 		//variables inicializadas
 		$error = '';
 		$message = '';
 		$tuplas = null;
+		$wfs = array();
 		//realiza conexión
 		$conexion = PearDatabase::getInstance();
 		$conexion->resetSettings('mysqli', $host, $database, $user, $password);
@@ -23,31 +26,30 @@ class Settings_Vtiger_ConnectionExternalWorkFlows_Action extends Settings_Vtiger
 			$conexion = null;
 		} else {
 			global $adb;
-			$wfs = array();
 			vimport('~~modules/com_vtiger_workflow/VTWorkflowManager.inc');
 			vimport('~~modules/com_vtiger_workflow/VTTaskManager.inc');
 			$wfm = new VTWorkflowManager($adb);
 			$tm = new VTTaskManager($adb);
-			foreach ($ids as $value) {
+			foreach ($ids as $key => $value) {
 				$wf = $wfm->retrieve($value);
 				$wf->tasks = $tm->getTasksForWorkflow($value);
-				$wfs[] = $wf;
+				$wfs[$key] = $wf;
 			}
 			$conexion->resetSettings();
 			$conexion->connect();
 			foreach ($wfs as $wf) {
 				$wf->id = null;
-				$wfm->save($wf);/*
+				$wfm->save($wf);
 				foreach ($wf->tasks as $task) {
 					$task->id = null;
 					$task->workflowId = $wf->id;
-					$tm->save($task);
-				}*/
+					$tm->saveTask($task);
+				}
 			}			
 		}
 
 		if($conexion != null){
-			$responce->setResult(array('success'=>true));
+			$responce->setResult(array('success'=>true, 'wfs' => $wfs));
 		}else{
 			if($message == '')
 				$responce->setResult(array('success'=>false, 'message'=> "No se puede conectar con el servidor", 'error' => $error));
