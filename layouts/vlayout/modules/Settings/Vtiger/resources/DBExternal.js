@@ -215,7 +215,12 @@
 	  	AppConnector.request(params).then(
 	  		function(data) {
 	  			if(data !== null && data['success'] === true){
-	  				aDeferred.resolve(data['result']);
+	  				data = data['result'];
+	  				if(data['success'] === true){
+	  					aDeferred.resolve(data);
+	  				}else{
+	  					aDeferred.reject(data);
+	  				}
 	  			}else{
 	  				if (data === null) {
 	  					aDeferred.reject({'message' : 'UPS! sucedió un error interno','error':'Verifique los campos seleccionados'});

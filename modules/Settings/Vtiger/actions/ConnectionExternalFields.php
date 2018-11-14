@@ -74,7 +74,7 @@ class Settings_Vtiger_ConnectionExternalFields_Action extends Settings_Vtiger_Ba
 						}
 					}
 					$dato['name'] = $modulo;
-					$dato[4] = str_replace( ' ', '*' , $dato[4]);
+					$dato[3] = str_replace( ' ', '*' , $dato[3]);
 					$dato['fieldlabel'] = str_replace( ' ', '*' , $dato['fieldlabel']);  
 					$tuplas[] = $dato;
 				}
