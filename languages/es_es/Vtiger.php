@@ -624,6 +624,19 @@ $languageStrings = array(
 	'Website: ' => 'Website: ',
 	'Tax' => 'Impuesto',
 	'LBL_ALPHABETS' => 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z',
+	
+	//Botones y labels
+	'LBL_CONECT'                   => 'Conectar',
+	'LBL_SELECTMODULESNAME' => 'Seleccione uno de los módulos',
+	'LBL_DBNAME'                => 'Nombre de la base de datos',
+	'LBL_DBNAME'                => 'Nombre de la base de datos',
+	'LBL_HOST'                	=> 'Dirección de la base de datos',
+	'LBL_PORT'                	=> 'Puerto',
+	'LBL_DBCONNECTION'           => 'Conexión a una base de datos externa',
+	'LBL_DBExternal'           => 'Conexión a base de datos externa',
+	'LBL_CONNECTIONEXTERNALDB'           => 'Se realiza una conexión a una base de datos externa para importar datos',
+	'LBL_DBCONNECTIONINFO'           => 'Complete los campos necesarios para la conexión',
+	'LBL_CHECKBOX_PORT'         => 'Habilitar si es necesario especificar un puerto',
 		
 	//Realted tab strings
 	'Service Contracts' => 'Contratos de Servicio',
@@ -821,4 +834,7 @@ $jsLanguageStrings = array(
     
     //Edit view mode Translations
         'JS_CHANGES_WILL_BE_LOST' => 'Sus cambios se perderán!',
+
+    //para otra bd
+    'JS_LBL_CHECKPORTENABLED' => 'Habilitar edición de puerto',
 );
