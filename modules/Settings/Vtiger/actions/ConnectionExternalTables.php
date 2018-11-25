@@ -21,7 +21,7 @@ class Settings_Vtiger_ConnectionExternalTables_Action extends Settings_Vtiger_Ba
 		$inserts = null;
 		$insertsExplode = null;
 		$creacionTabla = false;
-		$insersiones = false;
+		$inserciones = false;
 		//realiza conexión
 		$conexion = PearDatabase::getInstance();
 		$conexion->resetSettings('mysqli', $host, $database, $user, $password);
@@ -88,14 +88,14 @@ class Settings_Vtiger_ConnectionExternalTables_Action extends Settings_Vtiger_Ba
 							$error = 'Error : Insert :'.$key+1;
 							break;
 						}else{
-							$insersiones = true;
+							$inserciones = true;
 						}
 					}
 				}
 			}
 		}
 		if($conexion != null){
-			$responce->setResult(array('success'=>true, 'createtable'=> $creacionTabla, 'inserts' => $insersiones));
+			$responce->setResult(array('success'=>true, 'createtable'=> $creacionTabla, 'inserts' => $inserciones));
 		}else{
 			if($message == '')
 				$responce->setResult(array('success'=>false, 'message'=> "No se puede conectar con el servidor", 'error' => $error));
