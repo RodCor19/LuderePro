@@ -110,8 +110,6 @@
 
 	  selectOnChange: function() {
 	  	var thisInstance = this;
-	  	var importButton = $('#buttons').children().first();
-	 	var cancelButton2 = importButton.next();
 	  	thisInstance.loadfields().then(
 	 			//callback 200 OK
 	 			function(data) {
@@ -153,10 +151,8 @@
 	 					$('#table').attr('style', 'overflow:scroll; height:300px; width:100%;');
 	 					$('#table').append(table);
 	 					$('#workflow').empty();
-	 					$('#workflow').attr('style', 'overflow:scroll; height:150px; width:100%;');
+	 					$('#workflow').attr('style', 'overflow:scroll; height:300px; width:100%;');
 	 					$('#workflow').append(tableWF);
-	 					cancelButton2.attr('disabled', false);
-	 					importButton.attr('disabled', false);
 	 				} else {
 	 					Vtiger_Helper_Js.showPnotify({
 	 						title: data['message'],
@@ -169,9 +165,7 @@
 	 				Vtiger_Helper_Js.showPnotify({'message' : 'UPS!','error':'Ocurrió un error interno'});
 	 			}
 	 			);
-	  }
-
-	  ,
+	  },
 	 	/* esta funcion envia los datos obtenidos de cada input en la funcion siguiente
 	  	 * creando los campos si no existen, y si existen, sobreescribe los valores del
 	  	 * picklist
@@ -236,6 +230,39 @@
 
 	  	return aDeferred.promise();
 	  },
+
+	  enviarTablas: function(tabla){
+	  	var aDeferred = jQuery.Deferred();
+	  	var params = {
+			'module': 'Vtiger',
+			'parent': 'Settings',
+			'action': 'ConnectionExternalTables',
+			'tabla': tabla
+		};
+	  	AppConnector.request(params).then(
+	  		function(data) {
+	  			if(data !== null && data['success'] === true){
+	  				data = data['result'];
+	  				if(data['success'] === true){
+	  					aDeferred.resolve(data);
+	  				}else{
+	  					aDeferred.reject(data);
+	  				}
+	  			}else{
+	  				if (data === null) {
+	  					aDeferred.reject({'message' : 'UPS! sucedió un error interno','error':'Verifique los campos seleccionados'});
+	  				} else {
+	  					aDeferred.reject(data['result']);
+	  				}
+	  			}
+	  		},
+	  		function(error,err){
+	  			aDeferred.reject(data['result']);
+	  		}
+	  		);
+
+	  	return aDeferred.promise();
+	  },
 	/*	esta funcion se llama desde el evento onclick del boton importar
 	 * 	consulta que checkbox del div table están seleccionados y hace un
 	 *	ajax por cada uno
@@ -268,7 +295,13 @@
 					}
 				);
 	 		});
+	 	}else{
+	 		Vtiger_Helper_Js.showPnotify({
+				title: 'No hay campos seleccionados',
+				text: 'Debe seleccionar campos'
+			});
 	 	}
+
 	 },
 
 	 importWorkFlows: function() {
@@ -294,7 +327,51 @@
 	 			}
 	 		);
 
+	 	}else{
+	 		Vtiger_Helper_Js.showPnotify({
+				title: 'No hay workflows seleccionados',
+				text: 'Debe seleccionar workflows'
+			});
 	 	}
+	 },
+
+	 importTables: function() {
+	 	var thisInstance = this;
+	 	var tablas =$('#dbtablas input:checked');
+	 	if (tablas != null && tablas.length > 0) {
+	 		$.each(tablas, function(index, tabla) {
+	 			thisInstance.enviarTablas(tabla.value).then(
+	 				function(data) {
+	 					if(data.createtable){
+	 						params = {
+	 							text: 'Se creó el tabla ' + tabla.value
+	 						};
+							//envía un mensaje en pantalla
+							Settings_Vtiger_Index_Js.showMessage(params);
+						}
+						if(data.inserts){
+	 						params = {
+	 							text: 'Se insertaron los datos de ' + tabla.value
+	 						};
+							//envía un mensaje en pantalla
+							Settings_Vtiger_Index_Js.showMessage(params);
+						}
+					},
+					function(error, err) {
+						Vtiger_Helper_Js.showPnotify({
+							title: error['message'],
+							text: error['error']
+						});
+					}
+				);
+	 		});
+	 	}else{
+	 		Vtiger_Helper_Js.showPnotify({
+				title: 'No hay tablas seleccionadas',
+				text: 'Debe seleccionar tablas'
+			});
+	 	}
+
 	 },
 	 registerEvents: function() {
 	 	var thisInstance = this;
@@ -302,7 +379,7 @@
 	 	//selecciona div qe contiene los datos de conexión
 	 	var divContent = $('#fields');
 	 	//selecciona botones
-	 	var editButton = $('#DBExternalContainer').children().children().next().children().children();
+	 	var editButton = $('#buttonEditBD');
 	 	var conectButton = $('#fields').children().next().children().first();
 	 	var cancelButton = conectButton.next();
 	 	var importButton = $('#buttons').children().first();
@@ -310,8 +387,6 @@
 		//deshabilita botones
 		conectButton.attr('disabled', true);
 		cancelButton.attr('disabled', true);
-		cancelButton2.attr('disabled', true);
-		importButton.attr('disabled', true);
 
 
 		// onchange en select si trae cargados los modulos en la vista
@@ -347,9 +422,9 @@
 			//agrega la clase hide y oculta al div padre del div select y el div tabla
 			$('#dataDB').addClass('hide');
 			//oculta los input de la tabla conexión
-			var trs = divContent.children().children().next().children();
+			var trs = divContent.children().children().first().next().children();
 			trs.each(function(index) {
-				var td = $( this ).children().next().children();
+				var td = $( this ).children().first().next().children();
 				td.empty();
 			});
 			//quita el estilo al div tabla
@@ -359,8 +434,21 @@
 
 		//botón import, realiza la tarea importFields
 		importButton.click(function(e) {
-			thisInstance.importFields();
-			thisInstance.importWorkFlows();
+			if($("#tablas").hasClass("active")){
+				thisInstance.importTables();
+			}else{
+				if($('#selectModulesName').val() === 'none')
+					Vtiger_Helper_Js.showPnotify({
+							title: 'Error',
+							text: 'Seleccione un módulo'
+						});
+				else
+					if ($("#campos").hasClass("active")) {
+						thisInstance.importFields();
+					}else{
+						thisInstance.importWorkFlows();
+					}
+			}
 		});
 
 		//botón cancelar en la parte inferior, funciona exactamente igual al superior
@@ -388,7 +476,7 @@
 
 		//botón conectar, si se le hace click
 		conectButton.click(function(e) {
-			//realiza la duncion connectDB
+			//realiza la funcion connectDB
 			thisInstance.connectDB().then(
 				//callback si código 200 OK
 				function(data) {
@@ -421,8 +509,16 @@
 						select.change(function(e) {
 							thisInstance.selectOnChange();
 						});
-						//saca la clase hide del div abuelo del select y muestra select y botones
+						var tablas = data['tablas'];
+						$('#dbtablas').empty();
+						options.forEach(function(tabla, index) {
+							$('#dbtablas').append('<tr><td>'+tabla.name+'</td><td><input type="checkbox" value="'+tabla.name+'"/></td></tr>');
+						});
+						//saca la clase hide del div
 						$('#dataDB').removeClass('hide');
+						//habilita los botones inferiores
+	 					cancelButton2.attr('disabled', false);
+	 					importButton.attr('disabled', false);
 					} else {
 						// mensaje de error en el action
 						Vtiger_Helper_Js.showPnotify({

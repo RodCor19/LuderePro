@@ -11,6 +11,7 @@ class Settings_Vtiger_ConnectionExternalDB_Action extends Settings_Vtiger_Basic_
 		$error = '';
 		$message = '';
 		$tuplas = null;
+		$tablas = null;
 		$conexion = PearDatabase::getInstance();
 		$conexion->resetSettings('mysqli', $host, $database, $user, $password);
 		$conexion->connect();
@@ -37,12 +38,24 @@ class Settings_Vtiger_ConnectionExternalDB_Action extends Settings_Vtiger_Basic_
 					$tuplas[] = $dato;
 				}
 			}
+			$consulta = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ? AND NOT TABLE_NAME LIKE 'com_vtiger%' AND NOT TABLE_NAME LIKE 'vtiger%'"
+			$result	= $conexion->pquery($consulta, array($database));
+			if(!$result){
+				$error = 'Error: falló la consulta';
+				$conexion = null;
+			}else{
+				foreach ($result as $dato) {
+					$tabla = null;
+					$tabla['name'] = $dato['TABLE_NAME'];
+					$tablas[] = $tabla;
+				}
+			}
 		}
 		if($conexion !== null){
-			$responce->setResult(array('success'=>true, 'data'=> $tuplas));
+			$responce->setResult(array('success'=>true, 'data'=> $tuplas, 'tablas' => $tablas));
 		}else{
 			$responce->setResult(array('success'=>false, 'message'=> "No se puede conectar con el servidor", 'error' => $error));
-		$conexion = PearDatabase::getInstance();
+			$conexion = PearDatabase::getInstance();
 		}
 		$conexion->resetSettings();
 		$conexion->connect();
@@ -54,28 +67,28 @@ class Settings_Vtiger_ConnectionExternalDB_Action extends Settings_Vtiger_Basic_
 	}
 
 	function ini($data, $file = null){
-    	$output = array();
-    	foreach ($data as $name => $section)
-    	{
-        	if (is_array($section))
-       		{
-            	$output[] = "[{$name}]".PHP_EOL; 
-            	foreach ($section as $key => $val)
-            	{
-                	$output[] = "\t$key=$val".PHP_EOL;
-            	}
-            	$output[]='';
-        	}
-    	}
+		$output = array();
+		foreach ($data as $name => $section)
+		{
+			if (is_array($section))
+			{
+				$output[] = "[{$name}]".PHP_EOL; 
+				foreach ($section as $key => $val)
+				{
+					$output[] = "\t$key=$val".PHP_EOL;
+				}
+				$output[]='';
+			}
+		}
     	// pegamos el INI
-    	$ini = join("\n", $output);
-    	if ($file && is_dir(dirname($file)))
-    	{
-        	$tmp = fopen($file, 'w+');
-        	fwrite($tmp, $ini);
-        	fclose($tmp);
-    	}
-    	return $ini;
+		$ini = join("\n", $output);
+		if ($file && is_dir(dirname($file)))
+		{
+			$tmp = fopen($file, 'w+');
+			fwrite($tmp, $ini);
+			fclose($tmp);
+		}
+		return $ini;
 	}
 
 }

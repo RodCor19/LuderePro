@@ -14,6 +14,7 @@ class Settings_Vtiger_DBExternal_View extends Settings_Vtiger_Index_View {
 	public function process(Vtiger_Request $request) {        
 		$qualifiedModuleName = $request->getModule(false);
 		$datos = null;
+		$tablas = null;
 		$dbdatos = null;
 		if(file_exists('dataBaseExports.ini')){
 			$dbdatos = parse_ini_file('dataBaseExports.ini');
@@ -36,13 +37,26 @@ class Settings_Vtiger_DBExternal_View extends Settings_Vtiger_Index_View {
 						$dato['name'] = vtranslate($dato['name']);
 						$datos[] = $dato;
 					}
-					$conexion->resetSettings();
-					$conexion->connect();
 				}
+				$consulta = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ? AND NOT TABLE_NAME LIKE 'com_vtiger%' AND NOT TABLE_NAME LIKE 'vtiger%'";
+				$result	= $conexion->pquery($consulta, array($database));
+				if(!$result){
+					$error = 'Error: falló la consulta';
+					$conexion = null;
+				}else{
+					foreach ($result as $dato) {
+						$tabla = null;
+						$tabla['name'] = $dato['TABLE_NAME'];
+						$tablas[] = $tabla;
+					}
+				}
+				$conexion->resetSettings();
+				$conexion->connect();
 			}
 		}
 		$viewer = $this->getViewer($request);
 		$viewer->assign('datos', $datos);
+		$viewer->assign('tablas', $tablas);
 		$viewer->assign('dbdatos', $dbdatos);
 		$viewer->view('DBExternal.tpl',$qualifiedModuleName);
 	}
