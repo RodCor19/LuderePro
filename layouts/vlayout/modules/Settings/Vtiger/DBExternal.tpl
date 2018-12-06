@@ -157,7 +157,10 @@
                                 Nombre de tabla
                             </th>
                             <th>
-                                Importar
+                                Crear
+                            </th>
+                            <th>
+                                Importar datos
                             </th>
                         </tr>
                     </thead>
@@ -166,7 +169,13 @@
                             {foreach $tablas as $dato}
                             <tr>
                                 <td>{$dato['name']}</td>
-                                <td><input type="checkbox" value="{$dato['name']}"></td>
+                                {if $dato['existe'] == 1}
+                                    <td></td>
+                                    <td><input class="import" type="checkbox" value="{$dato['name']}"></td>
+                                {else}
+                                    <td><input type="checkbox" value="{$dato['name']}"></td>
+                                    <td></td>
+                                {/if}
                             </tr>
                             {/foreach}
                         {/if}

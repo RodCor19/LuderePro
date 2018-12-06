@@ -44,11 +44,20 @@ class Settings_Vtiger_DBExternal_View extends Settings_Vtiger_Index_View {
 					$error = 'Error: falló la consulta';
 					$conexion = null;
 				}else{
+					$conexion->resetSettings();
+					$conexion->connect();
+					global $dbconfig;
 					foreach ($result as $dato) {
 						$tabla = null;
 						$tabla['name'] = $dato['TABLE_NAME'];
+						$consulta = "SELECT EXISTS(SELECT * FROM information_schema.tables WHERE table_schema= ? and table_name = ?) as existe;";
+						$control = $conexion->pquery($consulta, array($dbconfig['db_name'], $dato['TABLE_NAME']));
+						if($control->fields['existe'])
+							$tabla['existe'] = true;
+						else
+							$tabla['existe'] = false;
 						$tablas[] = $tabla;
-					}
+					}				
 				}
 				$conexion->resetSettings();
 				$conexion->connect();
@@ -60,12 +69,12 @@ class Settings_Vtiger_DBExternal_View extends Settings_Vtiger_Index_View {
 		$viewer->assign('dbdatos', $dbdatos);
 		$viewer->view('DBExternal.tpl',$qualifiedModuleName);
 	}
-	
+
 	function getPageTitle(Vtiger_Request $request) {
 		$qualifiedModuleName = $request->getModule(false);
 		return vtranslate('LBL_DBExternal',$qualifiedModuleName);
 	}
-	
+
 	/**
 	 * Function to get the list of Script models to be included
 	 * @param Vtiger_Request $request

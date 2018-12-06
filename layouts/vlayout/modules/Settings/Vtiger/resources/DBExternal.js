@@ -25,6 +25,12 @@
 
 	 connectDB : function() {
 	 	var aDeferred = jQuery.Deferred();
+	 	var progressInstance = jQuery.progressIndicator({
+    		'position':'html',
+    		'blockInfo' : {
+    			'enabled' : true,
+    		}
+   		});
 	 	var host = $('input[name="dbserver"]').val();
 	 	if ($('input[name="dbportEnable"]').is(':checked'))
 	 		host = host + ":" + $('input[name="dbport"]').val();
@@ -43,6 +49,7 @@
 	 		}
 	 		AppConnector.request(params).then(
 	 			function(data) {
+	 				progressInstance.progressIndicator({'mode' : 'hide'});
 	 				if(data !== null && data['success'] === true){
 	 					aDeferred.resolve(data['result']);
 	 				}else{
@@ -54,7 +61,8 @@
 	 				}
 	 			},
 	 			function(error,err){
-	 				aDeferred.reject();
+	 				progressInstance.progressIndicator({'mode' : 'hide'});
+	 				aDeferred.reject({'message' : 'UPS! sucedió un error interno','error':'Verifique los campos'});
 	 			}
 	 			);
 	 	} else {
@@ -124,14 +132,15 @@
 	 						//crea fila a fila
 	 						tuplas.forEach(function(fila, index) {
 	 							table = table + '<tr>';
-	 							table = table + '<td style="content-aling: center">'+fila['fieldlabel'].replace('*', ' ')+'</td>';
+	 							table = table + '<td style="content-aling: center">'+fila['fieldlabel']+'</td>';
 	 							table = table + '<td style="content-aling: center">'+fila['uitype']+'</td>';
+	 							var valores = { 0 : fila.fieldid, 1 : fila.fieldlabel.replace(' ', '*')};
 	 							if (fila.existe === false) {
-	 								table = table + '<td style="content-aling: center"><input type="checkbox" value ='+ JSON.stringify(fila) +' /></td>';
+	 								table = table + '<td style="content-aling: center"><input type="checkbox" value ='+ JSON.stringify(valores) +' /></td>';
 	 								table = table + '<td style="content-aling: center"></td>';
 	 							} else {
 	 								table = table + '<td style="content-aling: center"></td>';
-	 								table = table + '<td style="content-aling: center"><input type="checkbox" value ='+ JSON.stringify(fila) +' /></td>';
+	 								table = table + '<td style="content-aling: center"><input type="checkbox" value ='+ JSON.stringify(valores) +' /></td>';
 	 							}
 	 							table = table + '</tr>';
 	 						});
@@ -172,34 +181,49 @@
 		 */
 	  enviarCampos: function(fila){
 	  	var aDeferred = jQuery.Deferred();
+	 	var progressInstance = jQuery.progressIndicator({
+    		'position':'html',
+    		'blockInfo' : {
+    			'enabled' : true,
+    		}
+   		});
 	  	var params = {
 	  		'module' : 'Vtiger',
 	  		'parent' : 'Settings',
 	  		'action' : 'ConnectionExternalImport',
-	  		'tupla' : fila  
+	  		'campos' : fila  
 	  	}
 	  	AppConnector.request(params).then(
 	  		function(data) {
+	  			progressInstance.progressIndicator({'mode' : 'hide'});
 	  			if(data !== null && data['success'] === true){
-	  				aDeferred.resolve(data['result']);
+	  				data = data['result'];
+	  				if(data['success'] === true){
+	  					aDeferred.resolve(data);
+	  				}else{
+	  					aDeferred.reject(data);
+	  				}
 	  			}else{
 	  				if (data === null) {
 	  					aDeferred.reject({'message' : 'UPS! sucedió un error interno','error':'Verifique los campos seleccionados'});
-	  				} else {
-	  					aDeferred.reject(data['result']);
 	  				}
 	  			}
 	  		},
 	  		function(error,err){
-	  			aDeferred.reject(data['result']);
-	  		}
-	  		);
-
+	  			progressInstance.progressIndicator({'mode' : 'hide'});
+	  			aDeferred.reject({'message' : 'UPS! sucedió un error interno','error':'Verifique los campos seleccionados'});
+	  		});
 	  	return aDeferred.promise();
 	  },
 
 	  enviarWF: function(array){
 	  	var aDeferred = jQuery.Deferred();
+	 	var progressInstance = jQuery.progressIndicator({
+    		'position':'html',
+    		'blockInfo' : {
+    			'enabled' : true,
+    		}
+   		});
 	  	var params = {
 	  		'module' : 'Vtiger',
 	  		'parent' : 'Settings',
@@ -208,6 +232,7 @@
 	  	}
 	  	AppConnector.request(params).then(
 	  		function(data) {
+	  			progressInstance.progressIndicator({'mode' : 'hide'});
 	  			if(data !== null && data['success'] === true){
 	  				data = data['result'];
 	  				if(data['success'] === true){
@@ -224,23 +249,30 @@
 	  			}
 	  		},
 	  		function(error,err){
-	  			aDeferred.reject(data['result']);
-	  		}
-	  		);
-
+	  			progressInstance.progressIndicator({'mode' : 'hide'});
+	  			aDeferred.reject({'message' : 'UPS! sucedió un error interno','error':'Verifique los campos seleccionados'});
+	  		});
 	  	return aDeferred.promise();
 	  },
 
-	  enviarTablas: function(tabla){
+	  enviarTablas: function(tablas){
 	  	var aDeferred = jQuery.Deferred();
+	  	var progressInstance = jQuery.progressIndicator({
+    		'position':'html',
+    		'blockInfo' : {
+    			'enabled' : true,
+    		}
+   		});
+	  	tablas = JSON.stringify(tablas);
 	  	var params = {
 			'module': 'Vtiger',
 			'parent': 'Settings',
 			'action': 'ConnectionExternalTables',
-			'tabla': tabla
+			'tablas': tablas
 		};
 	  	AppConnector.request(params).then(
-	  		function(data) {
+	  		function(data){
+	  		 progressInstance.progressIndicator({'mode' : 'hide'});
 	  			if(data !== null && data['success'] === true){
 	  				data = data['result'];
 	  				if(data['success'] === true){
@@ -257,9 +289,9 @@
 	  			}
 	  		},
 	  		function(error,err){
-	  			aDeferred.reject(data['result']);
-	  		}
-	  		);
+	  			progressInstance.progressIndicator({'mode' : 'hide'});
+	  			aDeferred.reject({'message' : 'UPS! sucedió un error interno','error':'Verifique los campos seleccionados'});
+	 		});
 
 	  	return aDeferred.promise();
 	  },
@@ -271,30 +303,56 @@
 	 	var thisInstance = this;
 	 	var campos =$('#table input:checked');
 	 	if (campos != null && campos.length > 0) {
-	 		$.each(campos, function(index, fila) {
-	 			thisInstance.enviarCampos(fila.value).then(
-	 				function(data) {
-	 					var params = null;
-	 					var datosJson = JSON.parse(fila.value);
-	 					if(data.creacion)
-	 						params = {
-	 							text: 'Se creó el campo ' + datosJson['fieldlabel'].replace('*', ' ')
-	 						};
-	 					if(data.reescritura)
-	 						params = {
-	 							text: 'Se sobreescribieron los valores del campo '+ datosJson['fieldlabel'].replace('*', ' ')
-	 						};
-							//envía un mensaje en pantalla
-						Settings_Vtiger_Index_Js.showMessage(params);
-					},
-					function(error, err) {
-						Vtiger_Helper_Js.showPnotify({
-							title: error['message'],
-							text: error['error']
-						});
-					}
-				);
+	 		var array = new Array();
+	 		var arrayCampos = new Array();
+	 		$.each(campos, function(index, fila) {	 			
+	 			var datosJson = JSON.parse(fila.value);
+	 			array[index] = datosJson[0];
+	 			arrayCampos[datosJson[0]] = datosJson[1];
+	 			fila.checked = false;
 	 		});
+	 		thisInstance.enviarCampos(array).then(
+	 			function(data) {
+	 				var params = null;
+	 				data = data['data'];
+	 				$.each(data,function(index, fila) {
+	 					switch(fila.mensaje) {
+    						case 'creacion':
+        						params = {
+	 								text: 'Se creó el campo ' + arrayCampos[index].replace('*', ' ')
+	 							};
+								Settings_Vtiger_Index_Js.showMessage(params);
+						        break;
+						    case 'reemplazo':
+						        params = {
+	 								text: 'Se sobreescribieron los valores del campo ' + arrayCampos[index].replace('*', ' ')
+	 							};
+								Settings_Vtiger_Index_Js.showMessage(params);
+						        break;
+						    case 'error_cargar_valores':
+						        params = {
+						        	title: 'Error:',
+	 								text: 'No se obtuvieron los valores del campo ' + arrayCampos[index].replace('*', ' ')
+	 							};
+								Vtiger_Helper_Js.showPnotify(params);
+						        break;
+						    case 'error_consulta':
+						        params = {
+						        	title: 'Error:',
+	 								text: 'No se obtuvieron los datos del campo ' + arrayCampos[index].replace('*', ' ')
+	 							};
+								Vtiger_Helper_Js.showPnotify(params);
+						        break;
+						}
+	 				});
+				},
+				function(error, err) {
+					Vtiger_Helper_Js.showPnotify({
+						title: error['message'],
+						text: error['error']
+					});
+				}
+			);
 	 	}else{
 	 		Vtiger_Helper_Js.showPnotify({
 				title: 'No hay campos seleccionados',
@@ -311,6 +369,7 @@
 	 		var array = new Array();
 	 		$.each(workflows, function(index, fila) {
 	 			array[index] = fila.value;
+	 			fila.checked = false;
 	 		});
 	 		thisInstance.enviarWF(array).then(
 	 			function(data) {
@@ -337,34 +396,87 @@
 
 	 importTables: function() {
 	 	var thisInstance = this;
-	 	var tablas =$('#dbtablas input:checked');
+	 	var tablas = $('#dbtablas input:checked');
 	 	if (tablas != null && tablas.length > 0) {
-	 		$.each(tablas, function(index, tabla) {
-	 			thisInstance.enviarTablas(tabla.value).then(
-	 				function(data) {
-	 					if(data.createtable){
-	 						params = {
-	 							text: 'Se creó el tabla ' + tabla.value
-	 						};
-							//envía un mensaje en pantalla
-							Settings_Vtiger_Index_Js.showMessage(params);
-						}
-						if(data.inserts){
-	 						params = {
-	 							text: 'Se insertaron los datos de ' + tabla.value
-	 						};
-							//envía un mensaje en pantalla
-							Settings_Vtiger_Index_Js.showMessage(params);
-						}
-					},
-					function(error, err) {
-						Vtiger_Helper_Js.showPnotify({
-							title: error['message'],
-							text: error['error']
-						});
-					}
-				);
-	 		});
+	 		var array = new Array();
+	 		$.each(tablas, function(index, fila) {
+	 			var tabla = {};
+	 			tabla['nombre'] = fila.value;
+	 			if($(fila).hasClass('import')){
+	 				tabla['accion'] = 'importar';
+	 			}
+	 			else{
+	 				tabla['accion'] = 'crear';
+	 			}
+	 			array[index] = tabla;
+	 			fila.checked = false;
+	 		}); 
+	 		thisInstance.enviarTablas(array).then(
+	 			function(data) {
+	 				data = data['data'];
+	 				$.each(data, function(index, tabla) {
+	 					if(tabla.creacion !=  null)
+	 						switch(tabla.creacion){
+	 							case 'error_consulta':
+	 								params = {
+						        		title: 'Error:',
+	 									text: 'No se obtuvieron los datos de la tabla ' + index
+	 								};
+									Vtiger_Helper_Js.showPnotify(params);
+	 								break;
+	 							case 'error_crear':
+	 								params = {
+							        	title: 'Error:',
+	 									text: 'No se creó la tabla ' + index
+	 								};
+									Vtiger_Helper_Js.showPnotify(params);
+	 								break;
+	 							case 'creada':
+	 								params = {
+	 									text: 'Se creó la tabla ' + index
+	 								};
+	 								Settings_Vtiger_Index_Js.showMessage(params);
+	 								break;
+	 						}
+	 					switch(tabla.insercion){
+	 						case 'error_consulta':
+						        params = {
+						        	title: 'Error:',
+	 								text: 'No se obtuvieron los datos de la tabla ' + index
+	 							};
+								Vtiger_Helper_Js.showPnotify(params);
+	 							break;
+	 						case 'error_insertar':
+	 							params = {
+							       	title: 'Error:',
+	 								text: 'No se insertaron los datos de la tabla ' + index
+	 							};
+								Vtiger_Helper_Js.showPnotify(params);
+	 							break;
+	 						case 'error_vacio':
+	 							params = {
+							       	title: 'Error:',
+	 								text: 'La tabla ' + index + ' no contiene datos'
+	 							};
+								Vtiger_Helper_Js.showPnotify(params);
+	 							break;
+	 						case 'insercion':
+	 							params = {
+	 								text: 'Se importaron los datos de la tabla ' + index
+	 							};
+	 							Settings_Vtiger_Index_Js.showMessage(params);
+	 							break;
+	 					}
+	 					
+	 				});
+				},
+				function(error, err) {
+					Vtiger_Helper_Js.showPnotify({
+						title: error['message'],
+						text: error['error']
+					});
+				}
+			);
 	 	}else{
 	 		Vtiger_Helper_Js.showPnotify({
 				title: 'No hay tablas seleccionadas',
@@ -511,8 +623,11 @@
 						});
 						var tablas = data['tablas'];
 						$('#dbtablas').empty();
-						options.forEach(function(tabla, index) {
-							$('#dbtablas').append('<tr><td>'+tabla.name+'</td><td><input type="checkbox" value="'+tabla.name+'"/></td></tr>');
+						tablas.forEach(function(tabla, index) {
+							if(tabla.existe)
+								$('#dbtablas').append('<tr><td>'+tabla.name+'</td><td></td><td><input class="import" type="checkbox" value="'+tabla.name+'"/></td></tr>');
+							else
+								$('#dbtablas').append('<tr><td>'+tabla.name+'</td><td><input type="checkbox" value="'+tabla.name+'"/></td><td></td></tr>');
 						});
 						//saca la clase hide del div
 						$('#dataDB').removeClass('hide');
@@ -541,6 +656,13 @@
 
 		//boton editar, su onclick
 		editButton.click(function(e) {
+			$('#table').attr('style', '');
+			$('#workflow').attr('style', '');
+			$('#workflow').empty();
+			$('#table').empty();
+			$('#selectModulesName').empty().append('<option value="none">Seleccionar</option>');
+			$('#selectModulesName').off('change');
+			$('#dataDB').addClass('hide');
 			//selecciona las filas de la tabla con los datos de conexión
 			var trs = divContent.children().children().next().children();
 			//se define un array con los inputs

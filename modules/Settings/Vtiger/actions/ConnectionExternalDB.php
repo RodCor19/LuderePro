@@ -38,15 +38,24 @@ class Settings_Vtiger_ConnectionExternalDB_Action extends Settings_Vtiger_Basic_
 					$tuplas[] = $dato;
 				}
 			}
-			$consulta = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ? AND NOT TABLE_NAME LIKE 'com_vtiger%' AND NOT TABLE_NAME LIKE 'vtiger%'"
+			$consulta = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ? AND NOT TABLE_NAME LIKE 'com_vtiger%' AND NOT TABLE_NAME LIKE 'vtiger%'";
 			$result	= $conexion->pquery($consulta, array($database));
 			if(!$result){
 				$error = 'Error: falló la consulta';
 				$conexion = null;
 			}else{
+				$conexion->resetSettings();
+				$conexion->connect();
+				global $dbconfig;
 				foreach ($result as $dato) {
 					$tabla = null;
 					$tabla['name'] = $dato['TABLE_NAME'];
+					$consulta = "SELECT EXISTS(SELECT * FROM information_schema.tables WHERE table_schema= ? and table_name = ?) as existe;";
+					$control = $conexion->pquery($consulta, array($dbconfig['db_name'], $dato['TABLE_NAME']));
+					if($control->fields['existe'])
+						$tabla['existe'] = true;
+					else
+						$tabla['existe'] = false;
 					$tablas[] = $tabla;
 				}
 			}
