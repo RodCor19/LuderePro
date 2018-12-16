@@ -26,112 +26,24 @@ class Settings_Vtiger_ConnectionExternalTables_Action extends Settings_Vtiger_Ba
 			$conexion = null;
 		} else {
 			foreach ($tablas as $dato) {
-				$conexion->resetSettings('mysqli', $host, $database, $user, $password);
-				$conexion->connect();
 				$tabla = $dato['nombre'];
 				$accion = $dato['accion'];
 				$resultado = null;
-				$createtable = '';
-				$camposInsert = null;
-				$insert = '';
-				$inserts = null;
-				$consulta = "SELECT COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?";
-				$result	= $conexion->pquery($consulta, array($database, $tabla));
-				if($conexion->database->_errorMsg || $conexion->num_rows($result) == 0){
-					if ($accion == 'crear') {
-						$resultado['creacion'] = 'error_consulta';
-					}else{
-						$resultado['insercion'] = 'error_consulta';
-					}					
-				}else{
-					$createtable = 'CREATE TABLE `'.$tabla.'`(';
-					foreach ($result as $key => $value) {
-						$camposInsert[] = $value['COLUMN_NAME'];
-						$createtable = $createtable."\n\t`".$value['COLUMN_NAME']."` ".$value['DATA_TYPE'];
-						if ($value['CHARACTER_MAXIMUM_LENGTH'] != null && !($value['DATA_TYPE'] == 'text' && $value['CHARACTER_MAXIMUM_LENGTH'] == 65535)) {
-							$createtable = $createtable."(".$value['CHARACTER_MAXIMUM_LENGTH'].")";
-						}
-						if ($value['IS_NULLABLE'] == 'NO'){
-							$createtable = $createtable." not null";
-						}
-						
-						if($key < $conexion->num_rows($result)-1)
-							$createtable = $createtable.',';
-					}
-					$createtable = $createtable.');';
-					$consulta = "SELECT * FROM `".$tabla."`";
-					$result	= $conexion->pquery($consulta);
-					if ($conexion->database->_errorMsg) {
-						$resultado['insercion'] = 'error_consulta';
-					}
-					$insert = 'INSERT INTO `'.$tabla.'` (';
-					foreach ($camposInsert as $key => $value) {
-						$insert = $insert."`".$value."`";
-						if($key !== count($camposInsert)-1)
-							$insert = $insert.', ';
-					}
-					$insert = $insert.') VALUES (';
-					foreach ($camposInsert as $key => $value) {
-						$insert = $insert.'?';
-						if($key !== count($camposInsert)-1)
-							$insert = $insert.' ,';
-					}
-					$insert = $insert.')';
-					$conexion->resetSettings();
-					$conexion->connect();
-					foreach ($result as $value) {
-						$data = null;
-						foreach ($camposInsert as $campo) {
-							$data[] = $value[$campo];
-						}
-						$inserts[] = $data;
-					}
-
-					if ($accion == 'crear') {	
-						$control = $conexion->pquery($createtable);
-						if ($conexion->database->_errorMsg) {
-							$resultado['creacion'] = 'error_crear';
-						}else{
-							$resultado['creacion'] = 'creada';
-							if($resultado['insercion'] != 'error_consulta' && count($inserts) > 0){
-								$inserciones = false;
-								foreach ($inserts as $key => $value) {
-									$conexion->pquery($insert, $value);
-									if($conexion->database->_errorMsg){
-										$inserciones = false;
-										break;
-									}else{
-										$inserciones = true;
-									}
-								}
-								if ($inserciones) {
-									$resultado['insercion'] = 'insercion';
-								}else{
-									$resultado['insercion'] = 'error_insertar';
-								}
-							}elseif(count($inserts) == 0)
-							$resultado['insercion'] = 'error_vacio';
-						}
-					}else{
-						if($resultado['insercion'] != 'error_consulta' && count($inserts) > 0){
-							$inserciones = false;
-							foreach ($inserts as $key => $value) {
-								$conexion->pquery($insert, $value);
-								if($conexion->database->_errorMsg){
-									$inserciones = false;
-									break;
-								}else{
-									$inserciones = true;
-								}
-							}
-							if ($inserciones) {
-								$resultado['insercion'] = 'insercion';
-							}else{
-								$resultado['insercion'] = 'error_insertar';
-							}
-						}elseif(count($inserts) == 0)
-						$resultado['insercion'] = 'error_vacio';
-					}
+				switch ($accion) {
+					case '0':{
+						$resultado = $this->createtable($tabla, $resultado, $datos);
+						}break;
+					case '1':{
+						$resultado = $this->createtable($tabla, $resultado, $datos);
+						$resultado = $this->inserts($tabla, $resultado, $datos);
+						}break;
+					case '2':{
+						$resultado = $this->inserts($tabla, $resultado, $datos);
+						}break;					
+					default:{
+						$resultado['insercion'] = null;
+						$resultado['creacion'] = null;
+						}break;
 				}
 				$resultados[$tabla]=$resultado;
 			}
@@ -155,17 +67,21 @@ class Settings_Vtiger_ConnectionExternalTables_Action extends Settings_Vtiger_Ba
 		$request->validateWriteAccess(); 
 	}
 
-	function createTable($tabla, $resultado){
+	function createTable($tabla, $resultado, $datosbd = array()){
+		$conexion = PearDatabase::getInstance();
+		$host = $datosbd['host'];
+		$database = $datosbd['database'];
+		$user = $datosbd['user'];
+		$password = $datosbd['password'];
 		$conexion->resetSettings('mysqli', $host, $database, $user, $password);
 		$conexion->connect();
 		$consulta = "SELECT COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?";
 		$result	= $conexion->pquery($consulta, array($database, $tabla));
 		if($conexion->database->_errorMsg || $conexion->num_rows($result) == 0){
-				$resultado['creacion'] = 'error_consulta';
+			$resultado['creacion'] = 'error_consulta';
 		}else{
 			$createtable = 'CREATE TABLE `'.$tabla.'`(';
 			foreach ($result as $key => $value) {
-				$camposInsert[] = $value['COLUMN_NAME'];
 				$createtable = $createtable."\n\t`".$value['COLUMN_NAME']."` ".$value['DATA_TYPE'];
 				if ($value['CHARACTER_MAXIMUM_LENGTH'] != null && !($value['DATA_TYPE'] == 'text' && $value['CHARACTER_MAXIMUM_LENGTH'] == 65535)) {
 					$createtable = $createtable."(".$value['CHARACTER_MAXIMUM_LENGTH'].")";
@@ -178,11 +94,11 @@ class Settings_Vtiger_ConnectionExternalTables_Action extends Settings_Vtiger_Ba
 					$createtable = $createtable.',';
 
 			}
-			$insert = $insert.')';
+			$createtable = $createtable . ');';
 			$conexion->resetSettings();
 			$conexion->connect();
 
-			$control = $conexion->pquery($createtable);
+			$conexion->pquery($createtable);
 			if ($conexion->database->_errorMsg) {
 				$resultado['creacion'] = 'error_crear';
 			}else{
@@ -190,6 +106,72 @@ class Settings_Vtiger_ConnectionExternalTables_Action extends Settings_Vtiger_Ba
 			}
 
 		}
+		return $resultado;
+	}
+
+	function inserts($tabla, $resultado, $datosbd = array()){
+		$conexion = PearDatabase::getInstance();
+		$host = $datosbd['host'];
+		$database = $datosbd['database'];
+		$user = $datosbd['user'];
+		$password = $datosbd['password'];
+		$conexion->resetSettings('mysqli', $host, $database, $user, $password);
+		$conexion->connect();
+		$consulta = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?";
+		$result	= $conexion->pquery($consulta, array($database, $tabla));
+		if($conexion->database->_errorMsg || $conexion->num_rows($result) == 0){
+			$resultado['insercion'] = 'error_consulta';
+		}else{
+			foreach ($result as $key => $value) {
+				$camposInsert[] = $value['COLUMN_NAME'];
+			}
+			$consulta = "SELECT * FROM `".$tabla."`";
+			$result	= $conexion->pquery($consulta);
+			if ($conexion->database->_errorMsg) {
+				$resultado['insercion'] = 'error_consulta';
+			}
+			$insert = 'INSERT INTO `'.$tabla.'` (';
+			foreach ($camposInsert as $key => $value) {
+				$insert = $insert."`".$value."`";
+				if($key !== count($camposInsert)-1)
+					$insert = $insert.', ';
+			}
+			$insert = $insert.') VALUES (';
+			foreach ($camposInsert as $key => $value) {
+				$insert = $insert.'?';
+				if($key !== count($camposInsert)-1)
+					$insert = $insert.' ,';
+			}
+			$insert = $insert.')';
+			$conexion->resetSettings();
+			$conexion->connect();
+			foreach ($result as $value) {
+				$data = null;
+				foreach ($camposInsert as $campo) {
+					$data[] = $value[$campo];
+				}
+				$inserts[] = $data;
+			}
+			if($resultado['insercion'] != 'error_consulta' && count($inserts) > 0){
+				$inserciones = false;
+				foreach ($inserts as $key => $value) {
+					$conexion->pquery($insert, $value);
+					if($conexion->database->_errorMsg){
+						$inserciones = false;
+						break;
+					}else{
+						$inserciones = true;
+					}
+				}
+				if ($inserciones) {
+					$resultado['insercion'] = 'insercion';
+				}else{
+					$resultado['insercion'] = 'error_insertar';
+				}
+			}elseif(count($inserts) == 0)
+				$resultado['insercion'] = 'error_vacio';
+		}
+		return $resultado;
 	}
 }
 ?>

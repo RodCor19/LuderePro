@@ -157,7 +157,10 @@
                                 Nombre de tabla
                             </th>
                             <th>
-                                Crear
+                                Solo crear
+                            </th>
+                            <th>
+                                Crear e importar datos
                             </th>
                             <th>
                                 Importar datos
@@ -171,9 +174,11 @@
                                 <td>{$dato['name']}</td>
                                 {if $dato['existe'] == 1}
                                     <td></td>
+                                    <td></td>
                                     <td><input class="import" type="checkbox" value="{$dato['name']}"></td>
                                 {else}
                                     <td><input type="checkbox" value="{$dato['name']}"></td>
+                                    <td><input class="creaConDatos" type="checkbox" value="{$dato['name']}"></td>
                                     <td></td>
                                 {/if}
                             </tr>
