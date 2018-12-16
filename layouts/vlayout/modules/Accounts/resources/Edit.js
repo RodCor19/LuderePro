@@ -66,6 +66,27 @@ Vtiger_Edit_Js("Accounts_Edit_Js",{
 	getRecordId : function(container){
 		return jQuery('input[name="record"]',container).val();
 	},
+
+	getANwR : function(container){
+		var onchange = function() {
+			var rut = jQuery('input[name="siccode"]',container).val();
+			var params = {
+				'module' : 'Accounts',
+				'action' : 'checkRUTOwn',
+				'rut' : rut
+			}
+			AppConnector.request(params).then(
+				function(data) {
+					if (data !== null && data['data'] !== null && data['data'] !== '') {
+						jQuery('input[name="accountname"]',container).val(data.result['data']);
+					}
+				},
+				function(err, error) {
+				});
+		};
+		jQuery('input[name="siccode"]',container).change(onchange);
+
+	},
        
 	/**
 	 * This function will register before saving any record
@@ -251,5 +272,6 @@ Vtiger_Edit_Js("Accounts_Edit_Js",{
 		this.registerEventForCopyingAddress(container);
 		this.registerReferenceSelectionEvent(container);
 			//container.trigger(Vtiger_Edit_Js.recordPreSave, {'value': 'edit'});
+		this.getANwR(container);
 	}
 });

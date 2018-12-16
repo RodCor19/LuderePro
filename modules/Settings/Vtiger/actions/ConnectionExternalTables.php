@@ -110,7 +110,7 @@ class Settings_Vtiger_ConnectionExternalTables_Action extends Settings_Vtiger_Ba
 									$resultado['insercion'] = 'error_insertar';
 								}
 							}elseif(count($inserts) == 0)
-								$resultado['insercion'] = 'error_vacio';
+							$resultado['insercion'] = 'error_vacio';
 						}
 					}else{
 						if($resultado['insercion'] != 'error_consulta' && count($inserts) > 0){
@@ -130,7 +130,7 @@ class Settings_Vtiger_ConnectionExternalTables_Action extends Settings_Vtiger_Ba
 								$resultado['insercion'] = 'error_insertar';
 							}
 						}elseif(count($inserts) == 0)
-							$resultado['insercion'] = 'error_vacio';
+						$resultado['insercion'] = 'error_vacio';
 					}
 				}
 				$resultados[$tabla]=$resultado;
@@ -153,6 +153,43 @@ class Settings_Vtiger_ConnectionExternalTables_Action extends Settings_Vtiger_Ba
 
 	public function validateRequest(Vtiger_Request $request) { 
 		$request->validateWriteAccess(); 
+	}
+
+	function createTable($tabla, $resultado){
+		$conexion->resetSettings('mysqli', $host, $database, $user, $password);
+		$conexion->connect();
+		$consulta = "SELECT COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?";
+		$result	= $conexion->pquery($consulta, array($database, $tabla));
+		if($conexion->database->_errorMsg || $conexion->num_rows($result) == 0){
+				$resultado['creacion'] = 'error_consulta';
+		}else{
+			$createtable = 'CREATE TABLE `'.$tabla.'`(';
+			foreach ($result as $key => $value) {
+				$camposInsert[] = $value['COLUMN_NAME'];
+				$createtable = $createtable."\n\t`".$value['COLUMN_NAME']."` ".$value['DATA_TYPE'];
+				if ($value['CHARACTER_MAXIMUM_LENGTH'] != null && !($value['DATA_TYPE'] == 'text' && $value['CHARACTER_MAXIMUM_LENGTH'] == 65535)) {
+					$createtable = $createtable."(".$value['CHARACTER_MAXIMUM_LENGTH'].")";
+				}
+				if ($value['IS_NULLABLE'] == 'NO'){
+					$createtable = $createtable." not null";
+				}
+
+				if($key < $conexion->num_rows($result)-1)
+					$createtable = $createtable.',';
+
+			}
+			$insert = $insert.')';
+			$conexion->resetSettings();
+			$conexion->connect();
+
+			$control = $conexion->pquery($createtable);
+			if ($conexion->database->_errorMsg) {
+				$resultado['creacion'] = 'error_crear';
+			}else{
+				$resultado['creacion'] = 'creada';
+			}
+
+		}
 	}
 }
 ?>
